@@ -126,13 +126,13 @@
   }
  
   .social-icon:hover {
-    color: #4481eb;
-    border-color: #4481eb;
+    color: #0f1b4c;
+    border-color: #0f1b4c;
   }
  
   .btn {
     width: 150px;
-    background-color: #5995fd;
+    background-color: #0f1b4c;
     border: none;
     outline: none;
     height: 49px;
@@ -146,7 +146,7 @@
   }
  
   .btn:hover {
-    background-color: #4d84e2;
+    background-color: #0f1b4c;
   }
   .panels-container {
     position: absolute;
@@ -177,7 +177,6 @@
     transition: transform 1.1s ease-in-out;
     transition-delay: 0.4s;
   }
- 
   .panel {
     display: flex;
     flex-direction: column;

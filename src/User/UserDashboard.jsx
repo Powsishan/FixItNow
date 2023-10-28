@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './user.css'; // Import your custom CSS
+import './user.css';
+import { useNavigate } from 'react-router-dom';
 import { Nav, Tab } from 'react-bootstrap';
 import image1 from '../media/image1.jpeg';
 import logo from '../media/logo(1).png';
@@ -8,6 +9,7 @@ import { styled } from "@mui/material";
 import Axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 
 const UserDashboard = () => {
@@ -22,7 +24,12 @@ const UserDashboard = () => {
   const [address, setaddress] = useState('');
   const [qualification, setqualification] = useState('');
   const [Description, setDescription] = useState('');
-
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [activeTab, setActiveTab] = useState('profile');
+  const [isEditMode, setIsEditMode] = useState(false);
+const Navigate = useNavigate();
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
@@ -50,17 +57,10 @@ const UserDashboard = () => {
 
         });
     } else {
-      // Handle the case when the username is not found in local storage
-      // For example: redirect to the login page
+      //  username is not found in local storage
+      //  redirect to the login page
     }
   }, []);
-
-
-
-  const [activeTab, setActiveTab] = useState('profile');
-  const [isEditMode, setIsEditMode] = useState(false);
-
-
 
 
   const handleFirstNameChange = (e) => {
@@ -101,10 +101,9 @@ const UserDashboard = () => {
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
   }
-
   const handleLogout = () => {
-    // Add your logout logic here
-    // This could include clearing user session data, making an API request, or other relevant actions.
+    Navigate('/become-a-fixer')
+    localStorage.clear();
   };
 
   const handleSelect = (selectedTab) => {
@@ -112,13 +111,12 @@ const UserDashboard = () => {
   };
 
   const handleEditClick = () => {
-
     setIsEditMode(!isEditMode);
   };
 
 
   const handleUpdateClick = () => {
-    // Create an object with the updated user data
+    
     const updatedUserData = {
       firstName,
       lastName,
@@ -151,9 +149,7 @@ const UserDashboard = () => {
       });
   };
 
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  
 
   const handleOldPasswordChange = (e) => {
     setOldPassword(e.target.value);
@@ -177,6 +173,7 @@ const UserDashboard = () => {
 
     // Make an API request to change the password
     const changePasswordData = {
+      username,
       oldPassword,
       newPassword,
     };
@@ -214,11 +211,24 @@ const UserDashboard = () => {
 
 
   const handleDeleteAccount = () => {
-    // Add your logic to delete the user's account here
-    // You can make an API request to the server to delete the account
+    // Ask the user to confirm the account deletion
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      // If the user confirms, make a request to the API to delete the account
+      Axios.delete('http://localhost:3001/delete-account', { data: { username } })
+        .then((response) => {
+          // Handle success, e.g., show a success message and log the user out
+          toast.success('Account deleted successfully');
+          localStorage.clear(); // Log the user out by clearing local storage
+          Navigate('/become-a-fixer'); // Redirect the user to the login or home page
+        })
+        .catch((error) => {
+          // Handle errors, e.g., show an error message.
+          console.error('Error deleting account:', error);
+          toast.error('Error deleting account');
+        });
+    }
   };
-
-
+  
 
 
   const NavbarLogo = styled("img")(({ theme }) => ({
@@ -241,7 +251,7 @@ const UserDashboard = () => {
           <NavbarLogo src={logo} alt="logo" />
         </div>
         <div className="logout-container">
-          <button className="btn btn-danger logout-button">Logout</button>
+          <button className="btn btn-danger logout-button" eventKey="logout" onClick={handleLogout} >Logout</button>
         </div>
       </div>
       <div className="card rounded-4 p-4">
@@ -387,7 +397,6 @@ const UserDashboard = () => {
               <div class="card">
                 <div class="card-body ">
                   {/* This is the mobile responsive navigation */}
-
                   <div className="card-header border-bottom mb-3 d-flex d-md-none">
                     <Tab.Container id="mobileTabs" activeKey={activeTab} onSelect={(key) => setActiveTab(key)}>
                       <Nav variant="pills" role="tablist">
@@ -491,6 +500,7 @@ const UserDashboard = () => {
                       </Nav>
                     </Tab.Container>
                   </div>
+                   {/* This is the mobile responsive navigation end here*/}
                   {activeTab === 'profile' && (
                     <div className="tab-pane active" id="profile">
                       <div className="tab-pane active" id="profile">
@@ -553,7 +563,7 @@ const UserDashboard = () => {
                             )}
                           </div>
                           <div className="form-group col-md-6">
-                            <label htmlFor="location">Job Title</label>
+                            <label htmlFor="Job Title">Job Title</label>
                             {isEditMode ? (
                               <input
                                 type="text"
@@ -726,9 +736,11 @@ const UserDashboard = () => {
                             value={confirmNewPassword}
                             onChange={handleConfirmNewPasswordChange}
                           />
-                          <button className="btn btn-primary" type="button" onClick={handleChangePassword}>
+                          <div className='profile-userbuttons'>
+                          <button className="btn btn-primary w-auto " type="button" onClick={handleChangePassword}>
                             Change Password
                           </button>
+                          </div>
                         </div>
                       </form>
                       <hr />
@@ -737,10 +749,13 @@ const UserDashboard = () => {
                           <label className="d-block text-danger">Delete Account</label>
                           <p className="text-muted font-size-sm">Once you delete your account, there is no going back. Please be certain.</p>
                         </div>
-                        <button className="btn btn-danger" type="button" onClick={handleDeleteAccount}>
+                        <div className='profile-userbuttons'>
+                        <button className="btn btn-danger w-auto" type="button" onClick={handleDeleteAccount}>
                           Delete Account
                         </button>
+                        </div>
                       </form>
+                      
                     </div>
                   )}
 

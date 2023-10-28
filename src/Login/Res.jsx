@@ -6,6 +6,9 @@ import { faGoogle, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import './login.css';
 import registerImage from '../media/register.svg';
 import log from '../media/Login.svg';
+import sign from '../media/sign.svg';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
@@ -70,9 +73,7 @@ function LoginPage() {
   
       if (response.status === 200 && response.data.message === 'Login successful') {
         localStorage.setItem('username', formDataObj.username);
-        setSuccessMessage(
-          <Alert severity="success">Login successful</Alert>
-        );
+        toast.success('Login successful');
         window.location.href = '/UserDashboard';
         // You can perform additional actions here, such as redirecting the user
       } else {
@@ -152,9 +153,8 @@ function LoginPage() {
   
       if (response.status === 200) {
        
-         setSuccessMessage(
-        <Alert severity="success">Registration successful</Alert>
-      );
+        toast.success('Registration successful');
+
         
       } else if (response.status === 409) {
         setErrorMessage('Username or email already in use.');
@@ -172,6 +172,7 @@ function LoginPage() {
   
   return (
     <div className={`loginContainer ${isSignUpMode ? 'sign-up-mode' : ''}`}>
+        <ToastContainer />
       <div className="forms-container">
         <div className="signin-signup">
           <form action="#" className="sign-in-form loginForm" onSubmit={handleSignInSubmit}>
@@ -247,7 +248,7 @@ function LoginPage() {
               Sign Up
             </button>
           </div>
-          <img src={registerImage} className="image" alt="" />
+          <img src={sign} className="image" alt="" />
         </div>
         <div className="panel right-panel">
           <div className="contentLogin">

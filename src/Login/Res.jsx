@@ -15,6 +15,8 @@ function LoginPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  
+
   const handleSignUpClick = () => {
     setIsSignUpMode(true);
   };
@@ -67,6 +69,7 @@ function LoginPage() {
       const response = await Axios.post('http://localhost:3001/login', formDataObj);
   
       if (response.status === 200 && response.data.message === 'Login successful') {
+        localStorage.setItem('username', formDataObj.username);
         setSuccessMessage(
           <Alert severity="success">Login successful</Alert>
         );

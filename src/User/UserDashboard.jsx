@@ -6,10 +6,13 @@ import image1 from '../media/image1.jpeg';
 import logo from '../media/logo(1).png';
 import { styled } from "@mui/material";
 import Axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const UserDashboard = () => {
   const [serviceProviderData, setServiceProviderData] = useState({});
-  const [firstName, setFirstName] = useState(''); 
+  const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [JobTitle, setJobTitle] = useState('');
@@ -22,28 +25,34 @@ const UserDashboard = () => {
 
 
   useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      // Use the stored username to fetch user data
+      const apiUrl = `http://localhost:3001/profile-data?username=${storedUsername}`;
 
-    const apiUrl = 'http://localhost:3001/profile-data'; 
+      Axios.get(apiUrl, { withCredentials: true })
+        .then((response) => {
+          console.log('Username:', response.data.username);
+          setUsername(response.data.username);
+          setServiceProviderData(response.data);
+          setFirstName(response.data.firstName);
+          setLastName(response.data.lastName);
+          setJobTitle(response.data.JobTitle);
+          setmobileNumber(response.data.mobileNumber);
+          setemail(response.data.email);
+          setNICnumber(response.data.NICnumber);
+          setaddress(response.data.address);
+          setqualification(response.data.qualification);
+          setDescription(response.data.Description);
+        })
+        .catch((error) => {
+          console.error('Error fetching service provider data:', error);
 
-    Axios.get(apiUrl,{ withCredentials: true })
-      .then((response) => {
-        
-        setUsername(response.data.username);
-        setServiceProviderData(response.data);
-        setFirstName(response.data.firstName); 
-        
-        setJobTitle(response.data.JobTitle);
-        setmobileNumber(response.data.mobileNumber);
-        setemail(response.data.email);
-        setNICnumber(response.data.NICnumber);
-        setaddress(response.data.address);
-        setqualification(response.data.qualification);
-        setDescription(response.data.Description);
-      })
-      .catch((error) => {
-        console.error('Error fetching service provider data:', error);
-        
-      });
+        });
+    } else {
+      // Handle the case when the username is not found in local storage
+      // For example: redirect to the login page
+    }
   }, []);
 
 
@@ -55,7 +64,7 @@ const UserDashboard = () => {
 
 
   const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value); 
+    setFirstName(e.target.value);
   };
   const handleLastNameChange = (event) => {
     setLastName(event.target.value);
@@ -109,9 +118,84 @@ const UserDashboard = () => {
 
 
   const handleUpdateClick = () => {
-    console.log('isEditMode:', isEditMode);
-    setIsEditMode(false);
+    // Create an object with the updated user data
+    const updatedUserData = {
+      firstName,
+      lastName,
+      username,
+      JobTitle,
+      mobileNumber,
+      email,
+      NICnumber,
+      address,
+      qualification,
+      Description,
+    };
+
+    // Make a PUT request to update the user data
+    const apiUrl = `http://localhost:3001/update-profile`; // Replace with your API endpoint
+    Axios.put(apiUrl, updatedUserData, { withCredentials: true })
+      .then((response) => {
+        console.log('User data updated successfully:', response.data);
+
+        // You can also update the local state to reflect the changes
+        setServiceProviderData(updatedUserData);
+        toast.success('User data updated successfully');
+
+
+        // Exit edit mode
+        setIsEditMode(false);
+      })
+      .catch((error) => {
+        console.error('Error updating user data:', error);
+      });
   };
+
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  const handleOldPasswordChange = (e) => {
+    setOldPassword(e.target.value);
+  };
+
+  const handleNewPasswordChange = (e) => {
+    setNewPassword(e.target.value);
+  };
+
+  const handleConfirmNewPasswordChange = (e) => {
+    setConfirmNewPassword(e.target.value);
+  };
+
+  const handleChangePassword = () => {
+    // Implement the logic for changing the password here.
+    // Send a request to your backend API to change the password.
+    if (newPassword !== confirmNewPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+
+    // Make an API request to change the password
+    const changePasswordData = {
+      oldPassword,
+      newPassword,
+    };
+
+    Axios.post('http://localhost:3001/change-password', changePasswordData, { withCredentials: true })
+      .then((response) => {
+        // Handle success, e.g., show a success message and clear the password fields.
+        toast.success('Password changed successfully');
+        setOldPassword('');
+        setNewPassword('');
+        setConfirmNewPassword('');
+      })
+      .catch((error) => {
+        // Handle errors, e.g., show an error message.
+        console.error('Error changing password:', error);
+        toast.error('Error changing password');
+      });
+  };
+
 
   const handleResetClick = () => {
     setFirstName(serviceProviderData.firstName);
@@ -129,7 +213,10 @@ const UserDashboard = () => {
   };
 
 
-
+  const handleDeleteAccount = () => {
+    // Add your logic to delete the user's account here
+    // You can make an API request to the server to delete the account
+  };
 
 
 
@@ -141,9 +228,14 @@ const UserDashboard = () => {
     },
   }));
 
+
+
+
+
   return (
 
     <div className=" card-body" style={{ backgroundColor: '#e6f0ff' }}>
+      <ToastContainer />
       <div className="top-navbar">
         <div className="logo-container">
           <NavbarLogo src={logo} alt="logo" />
@@ -295,6 +387,7 @@ const UserDashboard = () => {
               <div class="card">
                 <div class="card-body ">
                   {/* This is the mobile responsive navigation */}
+
                   <div className="card-header border-bottom mb-3 d-flex d-md-none">
                     <Tab.Container id="mobileTabs" activeKey={activeTab} onSelect={(key) => setActiveTab(key)}>
                       <Nav variant="pills" role="tablist">
@@ -398,7 +491,6 @@ const UserDashboard = () => {
                       </Nav>
                     </Tab.Container>
                   </div>
-
                   {activeTab === 'profile' && (
                     <div className="tab-pane active" id="profile">
                       <div className="tab-pane active" id="profile">
@@ -459,7 +551,6 @@ const UserDashboard = () => {
                             ) : (
                               <div>{username}</div>
                             )}
-
                           </div>
                           <div className="form-group col-md-6">
                             <label htmlFor="location">Job Title</label>
@@ -609,28 +700,50 @@ const UserDashboard = () => {
                   )}
                   {activeTab === 'security' && (
                     <div className="tab-pane" id="security">
-                      <div className="tab-pane" id="security">
-                        <h6>SECURITY SETTINGS</h6>
-                        <hr />
-                        <form>
-                          <div className="form-group">
-                            <label className="d-block">Change Password</label>
-                            <input type="text" className="form-control" placeholder="Enter your old password" />
-                            <input type="text" className="form-control mt-1" placeholder="New password" />
-                            <input type="text" className="form-control mt-1" placeholder="Confirm new password" />
-                          </div>
-                        </form>
-                        <hr />
-                        <form>
-                          <div className="form-group">
-                            <label className="d-block text-danger">Delete Account</label>
-                            <p className="text-muted font-size-sm">Once you delete your account, there is no going back. Please be certain.</p>
-                          </div>
-                          <button className="btn btn-danger" type="button">Delete Account</button>
-                        </form>
-                      </div>
+                      <h6>SECURITY SETTINGS</h6>
+                      <hr />
+                      <form>
+                        <div className="form-group">
+                          <label className="d-block">Change Password</label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            placeholder="Enter your old password"
+                            value={oldPassword}
+                            onChange={handleOldPasswordChange}
+                          />
+                          <input
+                            type="password"
+                            className="form-control mt-1"
+                            placeholder="New password"
+                            value={newPassword}
+                            onChange={handleNewPasswordChange}
+                          />
+                          <input
+                            type="password"
+                            className="form-control mt-1"
+                            placeholder="Confirm new password"
+                            value={confirmNewPassword}
+                            onChange={handleConfirmNewPasswordChange}
+                          />
+                          <button className="btn btn-primary" type="button" onClick={handleChangePassword}>
+                            Change Password
+                          </button>
+                        </div>
+                      </form>
+                      <hr />
+                      <form>
+                        <div className="form-group">
+                          <label className="d-block text-danger">Delete Account</label>
+                          <p className="text-muted font-size-sm">Once you delete your account, there is no going back. Please be certain.</p>
+                        </div>
+                        <button className="btn btn-danger" type="button" onClick={handleDeleteAccount}>
+                          Delete Account
+                        </button>
+                      </form>
                     </div>
                   )}
+
                   {activeTab === 'notification' && (
                     <div className="tab-pane" id="notification">
                       <div className="tab-pane" id="notification">

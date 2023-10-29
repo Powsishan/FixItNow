@@ -11,6 +11,10 @@ import Footer from './Components/Footer';
 import Res from './Login/Res'; 
 import User from './Dashboard/User'; 
 import UserDashboard from './User/UserDashboard'; 
+import Custom from './ServiceProvider/CustomCard'; 
+import ServiceProfile from './ServiceProvider/ServiceProviderProfile'; 
+
+
 
 import ServiceProviderList from './ServiceProvider/ServiceProviderList'; 
 
@@ -24,6 +28,8 @@ function App() {
       <Routes>
         <Route path="/become-a-fixer" element={<Res />} />
         <Route path="/user" element={<User />} />
+        <Route path="/custom" element={<Custom />} />
+        <Route path="/ServiceProviderProfile" element={<ServiceProfile />} />
         <Route path="/ServiceProviderList" element={<ServiceProviderList />} />
         <Route path="/Userdashboard" element={<UserDashboard />} />
 

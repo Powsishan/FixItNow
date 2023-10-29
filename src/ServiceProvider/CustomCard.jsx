@@ -1,36 +1,109 @@
-import React from 'react';
-import { Card, Button } from 'react-bootstrap';
-
+import * as React from 'react';
+import AspectRatio from '@mui/joy/AspectRatio';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
+import Sheet from '@mui/joy/Sheet';
+import { Grid } from '@mui/material';
 
 
 const CustomCard = ({ table, handleTableSelect }) => {
   return (
-    <div className="card p-3 newCard-card">
-      <div className="row align-items-center">
-        <div className="col-12 col-md-4 text-center">
-          <Card.Img variant="top" src={`http://localhost:3001${table.img}`} className="fixed-size-image" />
-        </div>
-        <div className="col-12 col-md-8">
-          <h4 className="mb-0 mt-0 newCard-card-title">{table.firstName} {table.lastName}</h4>
-          <span>{table.JobTitle}</span>
-          <div className="p-2 mt-2 bg-primary rounded text-white newCard-stats">
-            <div className="d-flex flex-column mb-2">
-              <span className="newCard-articles">Description</span>
-              <p>{table.Description}</p>
-            </div>
-            <div className="d-flex flex-column">
-              <span className="newCard-rating">Rating</span>
-              <span className="newCard-number3">8.9</span>
-            </div>
-          </div>
-          <div className="button mt-2 d-flex flex-row flex-md-nowrap align-items-center newCard-button-group">
-            <Button variant="outline-primary" className="btn-sm w-100 mb-2 mb-md-0 newCard-btn-outline-primary">View</Button>
-            <Button variant="primary" className="btn-sm w-100 ml-md-2 newCard-btn-primary" onClick={() => handleTableSelect(table.table_name)}>Book now</Button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Box
+    sx={{
+      display: 'flex', 
+      width: '100%',
+      margin: '5px 0',
+      position: 'relative',
+      overflow: { xs: 'auto', sm: 'initial' },
+      boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    }}
+    >
+      <Box />
+      <Card
+      elevation={3}
+        orientation="horizontal"
+        sx={{
+          width: '100%',
+          flexWrap: 'wrap',
+          [`& > *`]: {
+            '--stack-point': '500px',
+            minWidth:
+              'clamp(0px, (calc(var(--stack-point) - 2 * var(--Card-padding) - 2 * var(--variant-borderWidth, 0px)) + 1px - 100%) * 999, 100%)',
+             
+          },
+          
+          
+         
+        }}
+      >
+        <AspectRatio flex ratio="1" maxHeight={182} sx={{ minWidth: 182 }}>
+          <img
+src={`http://localhost:3001${table.image_url}`}         
+   srcSet="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286&dpr=2 2x"
+            loading="lazy"
+            alt=""
+          />
+        </AspectRatio>
+        <CardContent>
+          <Typography fontSize="xl" fontWeight="lg">
+          {table.firstName} {table.lastName}
+
+          </Typography>
+          <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
+          {table.JobTitle}
+          </Typography>
+          <Sheet
+            sx={{
+              bgcolor: 'background.level1',
+              borderRadius: 'sm',
+              p: 1.5,
+              my: 1.5,
+              display: 'flex',
+              gap: 2,
+              '& > div': { flex: 1 },
+            }}
+          >
+           
+            <Grid container spacing={0} sx={{ flexGrow: 1 }}>
+            <Grid xs={12}>
+              <CardContent >
+              {table.Description}
+              </CardContent>
+              </Grid>
+              <Grid xs={6}>
+                <Typography level="body-xs" fontWeight="lg">
+                  Job Done
+                </Typography>
+                <Typography fontWeight="lg">34</Typography>
+              </Grid>
+              <Grid xs={6}>
+                <Typography level="body-xs" fontWeight="lg">
+                  Rating
+                </Typography>
+                <Typography fontWeight="lg">8.9</Typography>
+             </Grid>
+              </Grid>
+           
+          </Sheet>
+          <Box sx={{ display: 'flex', gap: 1.5, '& > button': { flex: 1 } }}>
+            <Button variant="outlined" color="neutral">
+              View
+            </Button>
+            <Button variant="solid"  sx={{
+    backgroundColor: '#0f1b4c',
+    '&:hover': {
+      backgroundColor: '#0f1b2c', 
+    },
+  }}>
+              Book Now
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
-
 export default CustomCard;

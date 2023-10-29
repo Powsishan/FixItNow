@@ -134,6 +134,7 @@
     width: 150px;
     background-color: #0f1b4c;
     border: none;
+    color: #fff;
     outline: none;
     height: 49px;
     border-radius: 49px;
@@ -142,6 +143,7 @@
     font-weight: 600;
     margin: 10px 0;
     cursor: pointer;
+    
     transition: 0.5s;
   }
  
@@ -166,7 +168,7 @@
     top: -10%;
     right: 48%;
     transform: translateY(-50%);
-    background-image: linear-gradient(-45deg, #687690 0%, #0F1B4C 100%);
+    background-image: linear-gradient(-45deg,  #687690 90%, #0F1B4C 55%);
     transition: 1.8s ease-in-out;
     border-radius: 50%;
     z-index: 6;

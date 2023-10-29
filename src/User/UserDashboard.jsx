@@ -3,18 +3,27 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './user.css';
 import { useNavigate } from 'react-router-dom';
 import { Nav, Tab } from 'react-bootstrap';
-import image1 from '../media/image1.jpeg';
 import logo from '../media/logo(1).png';
 import { styled } from "@mui/material";
 import Axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LinearProgress from '@mui/joy/LinearProgress';
+import Typography from '@mui/joy/Typography';
+import EditIcon from '@mui/icons-material/ModeEdit';
+import UpdateIcon from '@mui/icons-material/Done';
+import RestoreIcon from '@mui/icons-material/RotateLeftOutlined';
+import Logout from '@mui/icons-material/LogoutOutlined';
+import Avatar from '@mui/material/Avatar';
+
+
 
 
 
 const UserDashboard = () => {
   const [serviceProviderData, setServiceProviderData] = useState({});
   const [firstName, setFirstName] = useState('');
+  const [img, setImage] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [JobTitle, setJobTitle] = useState('');
@@ -29,7 +38,7 @@ const UserDashboard = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditMode, setIsEditMode] = useState(false);
-const Navigate = useNavigate();
+  const Navigate = useNavigate();
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
@@ -43,6 +52,7 @@ const Navigate = useNavigate();
           setUsername(response.data.username);
           setServiceProviderData(response.data);
           setFirstName(response.data.firstName);
+          setImage(response.data.img);
           setLastName(response.data.lastName);
           setJobTitle(response.data.JobTitle);
           setmobileNumber(response.data.mobileNumber);
@@ -116,10 +126,11 @@ const Navigate = useNavigate();
 
 
   const handleUpdateClick = () => {
-    
+
     const updatedUserData = {
       firstName,
       lastName,
+      img,
       username,
       JobTitle,
       mobileNumber,
@@ -149,7 +160,7 @@ const Navigate = useNavigate();
       });
   };
 
-  
+
 
   const handleOldPasswordChange = (e) => {
     setOldPassword(e.target.value);
@@ -197,6 +208,7 @@ const Navigate = useNavigate();
   const handleResetClick = () => {
     setFirstName(serviceProviderData.firstName);
     setLastName(serviceProviderData.lastName);
+    setImage(serviceProviderData.img);
     setUsername(serviceProviderData.username);
     setJobTitle(serviceProviderData.JobTitle);
     setmobileNumber(serviceProviderData.mobileNumber);
@@ -228,7 +240,49 @@ const Navigate = useNavigate();
         });
     }
   };
-  
+
+
+
+  const calculateProfileCompleteness = () => {
+    const fields = [
+      firstName, lastName, username, JobTitle, mobileNumber, img,
+      email, NICnumber, address, qualification, Description,
+    ];
+    const totalFields = fields.length;
+    const filledFields = fields.filter(field => field !== null && field !== '').length;
+    return Math.round((filledFields / totalFields) * 100);
+  };
+
+
+  // Render the progress bar in a similar style to your example
+  const renderProgressBar = () => {
+    const completeness = calculateProfileCompleteness();
+    return (
+      <div className="progress-bar-container" >
+        <Typography
+          level="body-xs"
+          fontWeight="xl"
+          textColor=""
+          sx={{ mixBlendMode: 'difference' }}
+        >
+          PROFILE COMPLETED {`${completeness}%`}
+        </Typography>
+        <LinearProgress
+          determinate
+          variant="outlined"
+          color="primary"
+          size="sm"
+          thickness={24}
+          value={completeness}
+          sx={{
+            '--LinearProgress-radius': '20px',
+            '--LinearProgress-thickness': '22px',
+
+          }}
+        />
+      </div>
+    );
+  };
 
 
   const NavbarLogo = styled("img")(({ theme }) => ({
@@ -250,9 +304,6 @@ const Navigate = useNavigate();
         <div className="logo-container">
           <NavbarLogo src={logo} alt="logo" />
         </div>
-        <div className="logout-container">
-          <button className="btn btn-danger logout-button" eventKey="logout" onClick={handleLogout} >Logout</button>
-        </div>
       </div>
       <div className="card rounded-4 p-4">
         <div className="container">
@@ -261,8 +312,12 @@ const Navigate = useNavigate();
               <div className="card">
                 <div className="card-body ">
                   <div class="profile-sidebar">
-                    <div class="profile-userpic">
-                      <img src={image1} class="img-responsive" alt="" />
+                    <div className="profile-userpic">
+                      <Avatar
+                        alt="Remy Sharp"
+                        src={logo}
+                        sx={{ width: 150, height: 150,marginLeft:11, borderBlockColor:'#e6f0ff',border:2  }}
+                      />
                     </div>
                     <div class="profile-usertitle">
                       <div class="profile-usertitle-name">
@@ -271,25 +326,31 @@ const Navigate = useNavigate();
                       <div class="profile-usertitle-job">
                         <p>{serviceProviderData.JobTitle}</p>
                       </div>
+                      {renderProgressBar()}
                     </div>
 
                     <div class="profile-userbuttons">
                       {isEditMode ? (
-                        // Render the "Update" and "Reset" buttons in edit mode
-                        <button type="button" className="btn btn-primary" onClick={handleUpdateClick}>
-                          Update Profile
-                        </button>
+
+                        <>
+                          <button type="button" className="btn btn-primary" onClick={handleUpdateClick}>
+                            Update Profile
+                          </button>
+                          <button type="button" className="btn btn-light" onClick={handleResetClick}>
+                            Reset Changes
+                          </button>
+
+                        </>
                       ) : (
-                        // Render the "Edit" button when not in edit mode
-                        <button type="button" className="btn btn-outline-primary" onClick={handleEditClick}>
-                          Edit
-                        </button>
-                      )}
-                      {isEditMode && (
-                        // Render the "Reset" button in edit mode
-                        <button type="button" className="btn btn-light" onClick={handleResetClick}>
-                          Reset Changes
-                        </button>
+
+                        <>
+                          <button type="button" className="btn btn-outline-primary" onClick={handleEditClick}>
+                            Edit
+                          </button>
+                          <button type="button" className="btn btn-outline-danger" onClick={handleLogout}>
+                            Logout
+                          </button>
+                        </>
                       )}
                     </div>
 
@@ -396,10 +457,13 @@ const Navigate = useNavigate();
             <div class="col-md-8">
               <div class="card">
                 <div class="card-body ">
+
                   {/* This is the mobile responsive navigation */}
                   <div className="card-header border-bottom mb-3 d-flex d-md-none">
+
                     <Tab.Container id="mobileTabs" activeKey={activeTab} onSelect={(key) => setActiveTab(key)}>
                       <Nav variant="pills" role="tablist">
+
                         <Nav.Item>
                           <Nav.Link eventKey="profile">
                             <svg
@@ -479,33 +543,46 @@ const Navigate = useNavigate();
                         </Nav.Item>
                         <Nav.Item>
                           <Nav.Link eventKey="logout" onClick={handleLogout}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="feather feather-log-out"
-                            >
-                              <path d="M9 9l3-3 3 3m0 6H8a4 4 0 01-4-4V5a4 4 0 014-4h10a4 4 0 014 4v6a4 4 0 01-4 4H9z"></path>
-                            </svg>
-                            Logout
+                            <Logout />
+
                           </Nav.Link>
                         </Nav.Item>
 
                       </Nav>
                     </Tab.Container>
+
                   </div>
-                   {/* This is the mobile responsive navigation end here*/}
+                  <div className="card-header border-bottom mb-3 d-flex d-md-none">
+                    {renderProgressBar()}
+                    {isEditMode ? ( // Hide "Edit" button when editMode is true
+                      <>
+                        <Nav.Item>
+                          <Nav.Link eventKey="update" className=" ms-3 me-3" onClick={handleUpdateClick}>
+                            <UpdateIcon />
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link eventKey="reset" className="me-3" onClick={handleResetClick}>
+                            <RestoreIcon />
+                          </Nav.Link>
+                        </Nav.Item>
+                      </>
+                    ) : (
+                      <Nav.Item className="ms-3 me-3"> {/* Add margin between the items */}
+                        <Nav.Link eventKey="edit" onClick={handleEditClick}>
+                          <EditIcon />
+                        </Nav.Link>
+                      </Nav.Item>
+                    )}
+                  </div>
+
+                  {/* This is the mobile responsive navigation end here*/}
                   {activeTab === 'profile' && (
                     <div className="tab-pane active" id="profile">
                       <div className="tab-pane active" id="profile">
 
                         <h6>YOUR PROFILE INFORMATION</h6>
+
                         <hr />
                         <form className="row g-3">
                           <div className="form-group col-md-6">
@@ -563,7 +640,7 @@ const Navigate = useNavigate();
                             )}
                           </div>
                           <div className="form-group col-md-6">
-                            <label htmlFor="Job Title">Job Title</label>
+                            <label htmlFor="serviceproviderprofile">Job Title</label>
                             {isEditMode ? (
                               <input
                                 type="text"
@@ -737,9 +814,9 @@ const Navigate = useNavigate();
                             onChange={handleConfirmNewPasswordChange}
                           />
                           <div className='profile-userbuttons'>
-                          <button className="btn btn-primary w-auto " type="button" onClick={handleChangePassword}>
-                            Change Password
-                          </button>
+                            <button className="btn btn-primary w-auto " type="button" onClick={handleChangePassword}>
+                              Change Password
+                            </button>
                           </div>
                         </div>
                       </form>
@@ -750,74 +827,21 @@ const Navigate = useNavigate();
                           <p className="text-muted font-size-sm">Once you delete your account, there is no going back. Please be certain.</p>
                         </div>
                         <div className='profile-userbuttons'>
-                        <button className="btn btn-danger w-auto" type="button" onClick={handleDeleteAccount}>
-                          Delete Account
-                        </button>
+                          <button className="btn btn-danger w-auto" type="button" onClick={handleDeleteAccount}>
+                            Delete Account
+                          </button>
                         </div>
                       </form>
-                      
+
                     </div>
                   )}
 
                   {activeTab === 'notification' && (
                     <div className="tab-pane" id="notification">
                       <div className="tab-pane" id="notification">
-                        <h6>NOTIFICATION SETTINGS</h6>
+                        <h6>Appointments</h6>
                         <hr />
-                        <form>
-                          <div className="form-group">
-                            <label className="d-block mb-0">Security Alerts</label>
-                            <div className="small text-muted mb-3">Receive security alert notifications via email</div>
-                            <div className="custom-control custom-checkbox">
-                              <input type="checkbox" className="custom-control-input" id="customCheck1" checked />
-                              <label className="custom-control-label" htmlFor="customCheck1">Email each time a vulnerability is found</label>
-                            </div>
-                            <div className="custom-control custom-checkbox">
-                              <input type="checkbox" className="custom-control-input" id="customCheck2" checked />
-                              <label className="custom-control-label" htmlFor="customCheck2">Email a digest summary of vulnerability</label>
-                            </div>
-                          </div>
-                          <div className="form-group mb-0">
-                            <label className="d-block">SMS Notifications</label>
-                            <ul className="list-group list-group-sm">
-                              <li className="list-group-item has-icon">
-                                Comments
-                                <div className="custom-control custom-control-nolabel custom-switch ml-auto">
-                                  <input type="checkbox" className="custom-control-input" id="customSwitch1" checked />
-                                  <label className="custom-control-label" htmlFor="customSwitch1"></label>
-                                </div>
-                              </li>
-                              <li className="list-group-item has-icon">
-                                Updates From People
-                                <div className="custom-control custom-control-nolabel custom-switch ml-auto">
-                                  <input type="checkbox" className="custom-control-input" id="customSwitch2" />
-                                  <label className="custom-control-label" htmlFor="customSwitch2"></label>
-                                </div>
-                              </li>
-                              <li className="list-group-item has-icon">
-                                Reminders
-                                <div className="custom-control custom-control-nolabel custom-switch ml-auto">
-                                  <input type="checkbox" className="custom-control-input" id="customSwitch3" checked />
-                                  <label className="custom-control-label" htmlFor="customSwitch3"></label>
-                                </div>
-                              </li>
-                              <li className="list-group-item has-icon">
-                                Events
-                                <div className="custom-control custom-control-nolabel custom-switch ml-auto">
-                                  <input type="checkbox" className="custom-control-input" id="customSwitch4" checked />
-                                  <label className="custom-control-label" htmlFor="customSwitch4"></label>
-                                </div>
-                              </li>
-                              <li className="list-group-item has-icon">
-                                Pages You Follow
-                                <div className="custom-control custom-control-nolabel custom-switch ml-auto">
-                                  <input type="checkbox" className="custom-control-input" id="customSwitch5" />
-                                  <label className="custom-control-label" htmlFor="customSwitch5"></label>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </form>
+
                       </div>
                     </div>
                   )}

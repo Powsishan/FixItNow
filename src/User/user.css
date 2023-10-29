@@ -62,14 +62,10 @@ body{
         background: #fff;
       }
       .profile-userpic img {
-        float: none;
-        margin: 0 auto;
-        width: 50%;
-        margin-left: 100px;
-        height: 50%;
-        -webkit-border-radius: 50% !important;
-        -moz-border-radius: 50% !important;
-        border-radius: 50% !important;
+        display: 'flex';
+        justify-content: center;
+        align-items: center;
+          height: '100vh';
       }
       .profile-usertitle {
         text-align: center;
@@ -83,11 +79,12 @@ body{
         margin-bottom: 7px;
       }
       .profile-userbuttons .btn {
+        align-items: center;
         text-transform: uppercase;
-        font-size: 10px !important; /* Use !important to ensure this value is applied */
+        font-size: 10px !important; 
         font-weight: 500;
-        padding: 5px 10px !important; /* Use !important to ensure this value is applied */
-        margin-left: 10px !important; /* Use !important to ensure this value is applied */
+        padding: 5px 10px !important; 
+        margin-left: 10px !important; 
     }
     
     .nav-item {

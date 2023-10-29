@@ -55,8 +55,12 @@ app.post('/register', async (req, res) => {
     const insertUserQuery = 'INSERT INTO serviceproviderprofile (username, email, password) VALUES (?, ?, ?)';
     db.query(insertUserQuery, [username, email, hashedPassword], (err) => {
       if (err) {
-        console.error('MySQL error:', err);
-        return res.status(500).json({ message: 'Internal server error' });
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(409).json({ message: 'Username or email already in use.' });
+        } else {
+          console.error('MySQL error:', err);
+          return res.status(500).json({ message: 'Internal server error' });
+        }
       }
 
       // Registration successful
@@ -166,6 +170,15 @@ app.get('/serviceproviderprofile', (req, res) => {
   });
 });
 
+//delete after image test
+app.get('/tables', (req, res) => {
+  const query = 'SELECT table_name, Description, image_url, JobTitle FROM tables';
+  db.query(query, (err, result) => {
+    if (err) { return res.status(500).json({ message: 'Internal Server Error' });}
+    res.status(200).json(result);
+  });
+});
+
 
 // Route for changing the user's password
 app.post('/change-password', async (req, res) => {
@@ -235,9 +248,41 @@ app.delete('/delete-account', (req, res) => {
   });
 });
 
+app.get('/profile-completeness/:username', (req, res) => {
+  const username = req.params.username;
+
+  const query = 'SELECT * FROM serviceproviderprofile WHERE username = ?';
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      console.error('Error fetching profile data:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const profile = results[0];
+    const completeness = calculateProfileCompleteness(profile);
+    res.json({ completeness });
+  });
+});
 
 
 
 app.listen(port, () => {
   console.log('Server running on http://localhost:3001');
 });
+
+
+function calculateProfileCompleteness(profile) {
+  const fields = [
+    profile.firstName, profile.lastName, profile.JobTitle, profile.mobileNumber,
+    profile.email, profile.NICnumber, profile.address, profile.qualification, profile.Description,
+  ];
+  const totalFields = fields.length;
+  const filledFields = fields.filter(field => field !== null).length;
+  return Math.round((filledFields / totalFields) * 100);
+}

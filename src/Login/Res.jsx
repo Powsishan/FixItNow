@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import './login.css';
-import registerImage from '../media/register.svg';
 import log from '../media/Login.svg';
 import sign from '../media/sign.svg';
 import { ToastContainer, toast } from 'react-toastify';

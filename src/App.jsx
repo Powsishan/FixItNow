@@ -13,6 +13,13 @@ import UsrLogin from './Login/UsrLogin';
 
 import User from './Dashboard/User'; 
 import UserDashboard from './User/UserDashboard'; 
+import Custom from './ServiceProvider/CustomCard'; 
+import ServiceProfile from './ServiceProvider/ServiceProviderProfile'; 
+import Bookings from './ServiceProvider/Booking'; 
+
+
+
+
 import FixerDetails from './Components/FixerDetails';
 import TermsCondition from './Components/TermsCondition';
 import AppointmentGuide from './Components/AppointmentGuide';
@@ -35,6 +42,10 @@ function App() {
         <Route path="/become-a-fixer" element={<Res />} />
         <Route path="/Usrlogin" element={<UsrLogin />} />
         <Route path="/user" element={<User />} />
+        <Route path="/booking/:username" element={<Bookings />} />
+
+        <Route path="/custom" element={<Custom />} />
+        <Route path="/ServiceProviderProfile" element={<ServiceProfile />} />
         <Route path="/ServiceProviderList" element={<ServiceProviderList />} />
         <Route path="/Userdashboard" element={<UserDashboard />} />
 

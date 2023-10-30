@@ -1,13 +1,17 @@
 const express = require('express');
 const mysql = require('mysql');
+const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
+const timeSlots = ["09:00", "11:00", "14:00", "16:00"];
+
 
 const app = express();
 const port = 3001;
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 // Middleware
 app.use(bodyParser.json());
@@ -161,7 +165,7 @@ app.put('/update-profile', (req, res) => {
 });
 
 app.get('/serviceproviderprofile', (req, res) => {
-  const query = 'SELECT firstName, lastName, Description, img, JobTitle FROM serviceproviderprofile';
+  const query = 'SELECT firstName, lastName, Description, img, JobTitle,username FROM serviceproviderprofile';
   db.query(query, (err, result) => {
     if (err) {
       return res.status(500).json({ message: 'Internal Server Error' });
@@ -267,6 +271,35 @@ app.get('/profile-completeness/:username', (req, res) => {
     const profile = results[0];
     const completeness = calculateProfileCompleteness(profile);
     res.json({ completeness });
+  });
+});
+
+
+app.post('/book', async (req, res) => {
+  const { username, booking_date, booking_time } = req.body;
+
+  // Validate time slot
+  if (!timeSlots.includes(booking_time)) {
+    return res.status(400).json({ message: 'Invalid time slot selected.' });
+  }
+
+  const checkQuery = 'SELECT * FROM bookings WHERE username = ? AND booking_date = ? AND booking_time = ?';
+  db.query(checkQuery, [username, booking_date, booking_time], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Internal Server Error 1' });
+    }
+
+    if (result.length > 0) {
+      return res.status(400).json({ message: 'Service Provider is on another appointment' });
+    }
+
+    const bookQuery = 'INSERT INTO bookings (username, booking_date, booking_time) VALUES (?, ?, ?)';
+    db.query(bookQuery, [username, booking_date, booking_time], (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: 'Internal Server Error 2' });
+      }
+      res.status(200).json({ message: 'Booked successfully' });
+    });
   });
 });
 

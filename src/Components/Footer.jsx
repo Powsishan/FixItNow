@@ -49,14 +49,14 @@ const Footer = () => {
                 mb: 2,
               }}
             >
-              Products
+              Services
             </Typography>
 
-            <FooterLink>Listing</FooterLink>
+            <FooterLink>Bookings</FooterLink>
             <br />
-            <FooterLink>Properties</FooterLink>
+            <FooterLink>Services</FooterLink>
             <br />
-            <FooterLink>Agents</FooterLink>
+            <FooterLink>Fixers</FooterLink>
             <br />
             <FooterLink>Blog</FooterLink>
           </Box>
@@ -73,7 +73,7 @@ const Footer = () => {
               Resources
             </Typography>
 
-            <FooterLink>Our Homes</FooterLink>
+            <FooterLink>Our Past</FooterLink>
             <br />
             <FooterLink>Stories</FooterLink>
             <br />
@@ -94,7 +94,7 @@ const Footer = () => {
               Company
             </Typography>
 
-            <FooterLink>Partnerships</FooterLink>
+            <FooterLink  >Partnerships</FooterLink>
             <br />
             <FooterLink>Terms of use</FooterLink>
             <br />
@@ -123,7 +123,7 @@ const Footer = () => {
                 mb: 2,
               }}
             >
-              You’ll find your next home, in any style you prefer.
+              Hire our Fixers & Keep your Homes Fixed and Clean.
             </Typography>
 
             <IconBox>

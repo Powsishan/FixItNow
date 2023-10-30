@@ -1,6 +1,8 @@
 import { Box, Button, styled, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import React from "react";
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from "./Navbar";
 
 import heroImg from "../media/hero_illustration.jpg";
@@ -18,6 +20,11 @@ const Hero = () => {
       textAlign: "center",
     },
   }));
+  const Navigate = useNavigate();
+  const bookService = () => {
+    Navigate('/UsrLogin')
+    localStorage.clear();
+  };
 
   const Title = styled(Typography)(({ theme }) => ({
     fontSize: "55px",
@@ -56,12 +63,15 @@ const Hero = () => {
             >
               Fixlt Now represents the culmination of innovative technology. user-centric design, and a commitment to bridging the gap between homeowners and service professionals...
             </Typography>
+            <Link to="/ServiceProviderList" style={{ textDecoration: 'none' }}>
             <CustomButton
               backgroundColor="#0F1B4C"
               color="#fff"
+              onClick={bookService} 
               buttonText="Book a service"
               heroBtn={true}
             />
+            </Link>
           </Box>
 
           <Box sx={{ flex: "1.51" }}>

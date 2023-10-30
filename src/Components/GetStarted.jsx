@@ -1,6 +1,7 @@
 import { Button, styled, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 import smartphone from "../media/smartphone.png";
 import CustomButton from "./CustomButton";
 
@@ -20,6 +21,11 @@ const GetStarted = () => {
       width: "90%",
     },
   }));
+  const Navigate = useNavigate();
+  const getStrtd = () => {
+    Navigate('/UsrLogin')
+    localStorage.clear();
+  };
 
   const CustomBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(10, 0, 10, 0),
@@ -47,6 +53,7 @@ const GetStarted = () => {
           <CustomButton
             backgroundColor="#fff"
             color="#17275F"
+            onClick={getStrtd} 
             buttonText="Get Started Now"
             getStartedBtn={true}
           />

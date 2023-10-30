@@ -4,8 +4,8 @@ import bedroomsIcon from "../media/bedroomsIcon.png";
 import bathroomsIcon from "../media/bathroomsIcon.png";
 import spaceIcon from "../media/spaceIcon.png";
 
-const House = ({ img, price, address, bedrooms, bathrooms, space }) => {
-  const HouseBox = styled(Box)(({ theme }) => ({
+const Service = ({ img, price, address, completed, incoming, area }) => {
+  const ServiceBox = styled(Box)(({ theme }) => ({
     borderTopLeftRadius: "10px",
     borderTopRightRadius: "10px",
     maxWidth: 350,
@@ -27,9 +27,9 @@ const House = ({ img, price, address, bedrooms, bathrooms, space }) => {
   }));
 
   return (
-    <HouseBox>
+    <ServiceBox>
       <ImgContainer>
-        <img src={img} alt="housePhoto" style={{ maxWidth: "100%" }} />
+        <img src={img} alt="servicePhoto" style={{ maxWidth: "100%" }} />
       </ImgContainer>
 
       <Box sx={{ padding: "1rem" }}>
@@ -50,27 +50,27 @@ const House = ({ img, price, address, bedrooms, bathrooms, space }) => {
           <InfoBox>
             <img src={bedroomsIcon} alt="bedroomsIcon" />
             <Typography variant="body2" sx={{ mt: 1 }}>
-              {bedrooms}
+              {completed}
             </Typography>
           </InfoBox>
 
           <InfoBox>
             <img src={bathroomsIcon} alt="bathroomssIcon" />
             <Typography variant="body2" sx={{ mt: 1 }}>
-              {bathrooms}
+              {incoming}
             </Typography>
           </InfoBox>
 
           <InfoBox>
             <img src={spaceIcon} alt="spaceIcon" />
             <Typography variant="body2" sx={{ mt: 1 }}>
-              {space}
+              {area}
             </Typography>
           </InfoBox>
         </Box>
       </Box>
-    </HouseBox>
+    </ServiceBox>
   );
 };
 
-export default House;
+export default Service;

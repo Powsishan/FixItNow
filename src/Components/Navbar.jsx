@@ -9,6 +9,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import LoginIcon from '@mui/icons-material/Login';
+import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import logoImg from "../media/logo.png";
 import { Container } from "@mui/system";
@@ -119,6 +120,12 @@ export const Navbar = () => {
       display: "none",
     },
   }));
+  
+  const Navigate = useNavigate();
+  const bookApntmnt = () => {
+    Navigate('/UsrLogin')
+    localStorage.clear();
+  };
 
   return (
     <NavbarContainer>
@@ -172,17 +179,17 @@ export const Navbar = () => {
 
 
 
-        
+
+  
         <CustomButton
           backgroundColor="#0F1B4C"
           color="#fff"
+          onClick={bookApntmnt} 
           buttonText="Book an Appoinment"
         />
-        
+ 
       </Box>
-      
 
-      
     </NavbarContainer>
   );
 };

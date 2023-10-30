@@ -1,11 +1,9 @@
-import { Box, Button, styled, Typography } from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
 import React from "react";
 import fixer from "../media/repair.png";
 import homeowner from "../media/house-owner.png";
-import buyIcon from "../media/buy_icon.png";
 import booking from "../media/appointment.png";
-import sellIcon from "../media/sell_icon.png";
-import rentIcon from "../media/rent_icon.png";
+import { Link } from 'react-router-dom';
 
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import CustomButton from "./CustomButton";
@@ -85,106 +83,117 @@ const Guide = () => {
 
       <GuidesBox>
         <GuideBox>
-          <img src={fixer} alt="fixer" />
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: "500",
-              fontSize: "20px",
-              color: "#3B3c45",
-              my: 1,
-            }}
-          >
-             Fixer Details & Policies
-          </Typography>
-          <Box
-            sx={{
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: "bold", fontSize: "14px", color: "#0689FF" }}
-            >
-              Become a Fixer
-            </Typography>
-            <ArrowRightAltIcon style={{ color: "#0689FF" }} />
-          </Box>
-        </GuideBox>
+  <img src={fixer} alt="fixer" />
+  <Typography
+    variant="body2"
+    sx={{
+      fontWeight: "500",
+      fontSize: "20px",
+      color: "#3B3c45",
+      my: 1,
+    }}
+  >
+     Fixer Details & Policies
+  </Typography>
+  <Link to="/FixerDetails">
+    <Box
+      sx={{
+        cursor: "pointer",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: "bold", fontSize: "14px", color: "#0689FF" }}
+      >
+        Fixer Terms
+      </Typography>
+      <ArrowRightAltIcon style={{ color: "#0689FF" }} />
+    </Box>
+  </Link>
+</GuideBox>
 
-        <GuideBox>
-          <img src={homeowner} alt="homeowner" />
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: "500",
-              fontSize: "20px",
-              color: "#3B3c45",
-              my: 1,
-            }}
-          >
-            Homeowner Terms & Conditions
-          </Typography>
-          <Box
-            sx={{
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: "bold", fontSize: "14px", color: "#0689FF" }}
-            >
-              Homeowner 
-            </Typography>
-            <ArrowRightAltIcon style={{ color: "#0689FF" }} />
-          </Box>
-        </GuideBox>
 
-        <GuideBox>
-          <img src={booking} alt="booking" />
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: "500",
-              fontSize: "20px",
-              color: "#3B3c45",
-              my: 1,
-            }}
-          >
-            Appoinment Guides
-          </Typography>
-          <Box
-            sx={{
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: "bold", fontSize: "14px", color: "#0689FF" }}
-            >
-            Appoinments
-            </Typography>
-            <ArrowRightAltIcon style={{ color: "#0689FF" }} />
-          </Box>
-        </GuideBox>
+<GuideBox>
+  <img src={homeowner} alt="homeowner" />
+  <Typography
+    variant="body2"
+    sx={{
+      fontWeight: "500",
+      fontSize: "20px",
+      color: "#3B3c45",
+      my: 1,
+    }}
+  >
+    Homeowner Terms & Conditions
+  </Typography>
+  <Link to="/Terms">
+    <Box
+      sx={{
+        cursor: "pointer",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: "bold", fontSize: "14px", color: "#0689FF" }}
+      >
+        Users Terms 
+      </Typography>
+      <ArrowRightAltIcon style={{ color: "#0689FF" }} />
+    </Box>
+  </Link>
+</GuideBox>
+
+<GuideBox>
+  <img src={booking} alt="booking" />
+  <Typography
+    variant="body2"
+    sx={{
+      fontWeight: "500",
+      fontSize: "20px",
+      color: "#3B3c45",
+      my: 1,
+    }}
+  >
+    Appoinment Guides
+  </Typography>
+  <Link to="/AppGuide">
+    <Box
+      sx={{
+        cursor: "pointer",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: "bold", fontSize: "14px", color: "#0689FF" }}
+      >
+        Appointments Guide
+      </Typography>
+      <ArrowRightAltIcon style={{ color: "#0689FF" }} />
+    </Box>
+  </Link>
+</GuideBox>
       </GuidesBox>
 
-      <CustomButton
-        backgroundColor="#0F1B4C"
-        color="#fff"
-        buttonText="See Full Guides"
-        guideBtn={true}
-      />
+      <Link to="/CompGuide" style={{ textDecoration: 'none' }}>
+  <CustomButton
+    backgroundColor="#0F1B4C"
+    color="#fff"
+    buttonText="See Full Guides"
+    guideBtn={true}
+  />
+</Link>
+
     </Box>
+    
   );
 };
 

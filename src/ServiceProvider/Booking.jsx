@@ -94,7 +94,7 @@ console.log('Booking user:', storedUsername);
                 Book service provider {username}
             </Typography>
             <TextField
-                label="Date"
+                label=""
                 type="date"
                 value={formData.booking_date}
                 onChange={(e) => setFormData({ ...formData, booking_date: e.target.value })}

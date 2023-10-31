@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const path = require('path');
+const multer = require('multer');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
@@ -11,7 +12,7 @@ const timeSlots = ["09:00", "11:00", "14:00", "16:00"];
 
 const app = express();
 const port = 3001;
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.use('/images', express.static(path.join(__dirname, '../images')));
 
 // Middleware
 app.use(bodyParser.json());
@@ -29,6 +30,18 @@ app.use(session({
     maxAge: 60000,
   },
 }));
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Define the directory to store the uploaded files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -421,7 +434,7 @@ app.delete('/delete-account', (req, res) => {
 });
 
 //user delete account 
-app.delete('/delete-account', (req, res) => {
+app.delete('/user-delete-account', (req, res) => {
   const { u_username } = req.body;
 
   // Delete the user's account in the database
@@ -457,6 +470,46 @@ app.get('/profile-completeness/:username', (req, res) => {
     res.json({ completeness });
   });
 });
+
+//document upload 
+// ...
+
+app.post('/upload-documents', upload.array('documents', 3), (req, res) => {
+  // Extract the uploaded files from the request
+  const files = req.files;
+
+  // Process and save the file details to the database
+  files.forEach((file, index) => {
+    const { filename, size, mimetype } = file;
+
+    // Define the column to insert the file details based on the index
+    let columnName;
+    if (index === 0) {
+      columnName = 'NICphoto';
+    } else if (index === 1) {
+      columnName = 'accreditation';
+    } else if (index === 2) {
+      columnName = 'policeclearence';
+    }
+
+    // Insert the file details into the database
+    const sql = `INSERT INTO documents (${columnName}, size, mimetype) VALUES (?, ?, ?)`;
+    const values = [filename, size, mimetype];
+
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.error('Error inserting file details into the database:', err);
+        res.status(500).send('Error saving document to the database');
+      } else {
+        console.log('File details saved to the database');
+      }
+    });
+  });
+
+  res.status(200).send('Documents uploaded and saved successfully');
+});
+
+// ...
 
 
 app.post('/book', async (req, res) => {
@@ -544,6 +597,78 @@ app.get('/user-bookings', (req, res) => {
 
     // Return the booking data as JSON
     res.status(200).json(results);
+  });
+});
+
+
+app.post('/forgot-password', (req, res) => {
+  const { email } = req.body;
+
+  // Check if the user with the provided email exists in your database
+  const query = 'SELECT username FROM serviceproviderprofile WHERE email = ?';
+  db.query(query, [email], (err, results) => {
+    if (err) {
+      console.error('MySQL error:', err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Generate a unique token for password reset
+    const resetToken = generateResetToken();
+    resetTokens[resetToken] = email;
+
+    // Compose the email message with the reset link
+    const resetLink = `http://your-app-url/reset-password?token=${resetToken}`;
+    const mailOptions = {
+      from: 'your-email-username',
+      to: email,
+      subject: 'Password Reset Request',
+      text: `Click the following link to reset your password: ${resetLink}`,
+    };
+
+    // Send the email with the reset link
+    transporter.sendMail(mailOptions, (emailErr) => {
+      if (emailErr) {
+        console.error('Error sending email:', emailErr);
+        return res.status(500).json({ message: 'Failed to send password reset email' });
+      }
+      res.status(200).json({ message: 'Password reset email sent successfully' });
+    });
+  });
+});
+
+// Create an endpoint for resetting the password using the provided token
+app.post('/reset-password', (req, res) => {
+  const { token, newPassword } = req.body;
+
+  // Verify if the token exists and get the associated email
+  const email = resetTokens[token];
+  if (!email) {
+    return res.status(400).json({ message: 'Invalid or expired token' });
+  }
+
+  // Hash the new password
+  bcrypt.hash(newPassword, 10, (hashErr, hashedPassword) => {
+    if (hashErr) {
+      console.error('Error hashing the password:', hashErr);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    // Update the user's password in the database
+    const updatePasswordQuery = 'UPDATE serviceproviderprofile SET password = ? WHERE email = ?';
+    db.query(updatePasswordQuery, [hashedPassword, email], (updateErr) => {
+      if (updateErr) {
+        console.error('MySQL error:', updateErr);
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+
+      // Password reset successful, remove the token
+      delete resetTokens[token];
+      res.status(200).json({ message: 'Password reset successful' });
+    });
   });
 });
 

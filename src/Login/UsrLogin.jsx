@@ -31,7 +31,7 @@ function UsrLogin() {
   };
 
   const handleForgotPasswordClick = () => {
-    setIsForgotPasswordMode(true);
+   
   };
 
   const hideMessages = () => {

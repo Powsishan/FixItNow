@@ -40,7 +40,7 @@ const CustomCard = ({ table, handleTableSelect }) => {
       >
         <AspectRatio flex ratio="1" maxHeight={182} sx={{ minWidth: 182 }}>
           <img
-            src={`http://localhost:3001${table.img}`}
+            src={`http://localhost:3001/images/${table.img}`}
 
             loading="lazy"
             alt=""
@@ -48,7 +48,8 @@ const CustomCard = ({ table, handleTableSelect }) => {
         </AspectRatio>
         <CardContent>
           <Typography fontSize="xl" fontWeight="lg">
-            {table.username}
+            {table.firstName} {table.lastName}
+            
 
           </Typography>
           <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">

@@ -16,7 +16,7 @@ import RestoreIcon from '@mui/icons-material/RotateLeftOutlined';
 import Logout from '@mui/icons-material/LogoutOutlined';
 import Avatar from '@mui/material/Avatar';
 import BookingList from './BookingList';
-
+import { useDropzone } from 'react-dropzone';
 
 
 
@@ -160,7 +160,41 @@ const UserDashboard = () => {
       });
   };
 
+  const handleDocumentSubmit = (acceptedFiles) => {
+    // Ensure that acceptedFiles is an array
+    if (!Array.isArray(acceptedFiles)) {
+      // Handle the case where acceptedFiles is not an array
+      console.error('Accepted files is not an array:', acceptedFiles);
+      return;
+    }
 
+    // Create a FormData object to send the files to the server
+    const formData = new FormData();
+    acceptedFiles.forEach((file) => {
+      formData.append('documents', file);
+    });
+
+    // Send the files to the server
+    Axios.post('http://localhost:3001/upload-documents', formData, { withCredentials: true })
+      .then((response) => {
+        // Handle success, e.g., show a success message to the user
+        toast.success('Documents uploaded and saved successfully');
+      })
+      .catch((error) => {
+        // Handle errors, e.g., show an error message to the user
+        console.error('Error uploading documents:', error);
+        toast.error('Error uploading documents');
+      });
+  };
+
+
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    accept: '.pdf, .doc, .docx',
+    onDrop: (acceptedFiles) => {
+      // acceptedFiles is expected to be an array
+      handleDocumentSubmit(acceptedFiles);
+    },
+  });
 
   const handleOldPasswordChange = (e) => {
     setOldPassword(e.target.value);
@@ -315,8 +349,8 @@ const UserDashboard = () => {
                     <div className="profile-userpic">
                       <Avatar
                         alt="Remy Sharp"
-                        src={logo}
-                        sx={{ width: 150, height: 150,marginLeft:11, borderBlockColor:'#e6f0ff',border:2  }}
+                        src={`http://localhost:3001/images/${serviceProviderData.img}`}
+                        sx={{ width: 150, height: 150, marginLeft: 11, borderBlockColor: '#e6f0ff', border: 2 }}
                       />
                     </div>
                     <div class="profile-usertitle">
@@ -752,35 +786,40 @@ const UserDashboard = () => {
                             )}
 
                           </div>
-                          {/* <div className="form-group small text-muted col-md-12">
-                            All of the fields on this page are optional and can be deleted at any time, and by filling them out, you're giving us consent to share this data wherever your user profile appears.
-                          </div> */}
-                          {/* <div className="col-md-12">
-                            <button type="button" className="btn btn-primary">Update Profile</button>
-                            <button type="reset" className="btn btn-light">Reset Changes</button>
-                          </div> */}
+
+
                         </form>
                       </div>
                     </div>
                   )}
                   {activeTab === 'account' && (
+
                     <div className="tab-pane" id="account">
+
                       <div className="tab-pane" id="account">
+
                         <h6>DOCUMENT SUBMISSION</h6>
                         <hr />
                         <form>
-                          <div>
-                            <label htmlFor="formFile" className="form-label">Default file input example</label>
-                            <input className="form-control" type="file" id="formFile" />
+                          <div {...getRootProps()} className="dropzone">
+                            <input {...getInputProps()} />
+                            <p>Drag and drop files here, or click to select files</p>
                           </div>
                           <div>
-                            <label htmlFor="formFile" className="form-label">Default file input example</label>
-                            <input className="form-control" type="file" id="formFile" />
+                            <label htmlFor="formFile" className="form-label">Police Clearance</label>
+                            <input className="form-control" type="file" id="policeclearence" />
                           </div>
                           <div>
-                            <label htmlFor="formFile" className="form-label">Default file input example</label>
-                            <input className="form-control" type="file" id="formFile" />
+                            <label htmlFor="formFile" className="form-label">Accreditation</label>
+                            <input className="form-control" type="file" id="accreditation" />
                           </div>
+                          <div>
+                            <label htmlFor="formFile" className="form-label">NIC Photo</label>
+                            <input className="form-control" type="file" id="NICphoto" />
+                          </div>
+                          <button className="btn btn-primary w-auto " type="button" onClick={handleDocumentSubmit}>
+                            Submit
+                          </button>
                         </form>
                       </div>
                     </div>

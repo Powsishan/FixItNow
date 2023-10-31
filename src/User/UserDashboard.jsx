@@ -72,6 +72,7 @@ const UserDashboard = () => {
     }
   }, []);
 
+  
 
   const handleFirstNameChange = (e) => {
     setFirstName(e.target.value);
@@ -103,10 +104,13 @@ const UserDashboard = () => {
   };
 
   
+  const handleDocumentSubmit = (event) => {
+   
+  };
 
   
   const handleLogout = () => {
-    Navigate('/Usrlogin')
+    Navigate('/')
     localStorage.clear();
   };
 
@@ -682,17 +686,20 @@ const UserDashboard = () => {
                         <hr />
                         <form>
                           <div>
-                            <label htmlFor="formFile" className="form-label">Default file input example</label>
-                            <input className="form-control" type="file" id="formFile" />
+                            <label htmlFor="formFile" className="form-label">Police Clearance</label>
+                            <input className="form-control" type="file" id="policeclearence" />
                           </div>
                           <div>
-                            <label htmlFor="formFile" className="form-label">Default file input example</label>
-                            <input className="form-control" type="file" id="formFile" />
+                            <label htmlFor="formFile" className="form-label">Accreditation</label>
+                            <input className="form-control" type="file" id="accreditation" />
                           </div>
                           <div>
-                            <label htmlFor="formFile" className="form-label">Default file input example</label>
-                            <input className="form-control" type="file" id="formFile" />
+                            <label htmlFor="formFile" className="form-label">NIC Photo</label>
+                            <input className="form-control" type="file" id="NICphoto" />
                           </div>
+                          <button className="btn btn-primary w-auto " type="button" onClick={handleDocumentSubmit}>
+                              Submit
+                            </button>
                         </form>
                       </div>
                     </div>

@@ -11,7 +11,7 @@ const timeSlots = ["09:00", "11:00", "14:00", "16:00"];
 
 const app = express();
 const port = 3001;
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.use('/images', express.static(path.join(__dirname, '../images')));
 
 // Middleware
 app.use(bodyParser.json());
@@ -544,6 +544,184 @@ app.get('/user-bookings', (req, res) => {
 
     // Return the booking data as JSON
     res.status(200).json(results);
+  });
+});
+
+
+//admin backend start 
+app.get('/api/serviceproviderprofile', (req, res) => {
+  const query = 'SELECT * FROM serviceproviderprofile';
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching data: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// Fetch all service providers
+app.get('/api/serviceproviderprofile', (req, res) => {
+  const query = 'SELECT * FROM serviceproviderprofile';
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching data: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// Create a new service provider
+app.post('/api/serviceproviderprofile', (req, res) => {
+  const newProvider = req.body;
+  const query = 'INSERT INTO serviceproviderprofile SET ?';
+  db.query(query, newProvider, (error, results) => {
+    if (error) {
+      console.error('Error creating a new provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(newProvider);
+    }
+  });
+});
+
+// Update an existing service provider
+app.put('/api/serviceproviderprofile/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const updatedProvider = req.body;
+  const query = 'UPDATE serviceproviderprofile SET ? WHERE ID = ?';
+  db.query(query, [updatedProvider, ID], (error, results) => {
+    if (error) {
+      console.error('Error updating provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else if (results.affectedRows === 1) {
+      console.log('Data updated successfully');
+      res.json(updatedProvider);
+    } else {
+      console.error('Data not updated. Provider not found or no changes made.');
+      res.status(404).json({ error: 'Provider not found or no changes made.' });
+    }
+  });
+});
+
+// API endpoint to delete a service provider
+app.delete('/api/serviceproviderprofile/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const query = 'DELETE FROM serviceproviderprofile WHERE ID = ?';
+  db.query(query, ID, (error, results) => {
+    if (error) {
+      console.error('Error deleting provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json({ message: 'Provider deleted' });
+    }
+  });
+});
+
+// Fetch all HOMEOWNERS 
+
+app.get('/api/users', (req, res) => {
+  const query = 'SELECT * FROM users';
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching data: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// Create a new home
+app.post('/api/users', (req, res) => {
+  const newProvider = req.body;
+  const query = 'INSERT INTO users SET ?';
+  db.query(query, newProvider, (error, results) => {
+    if (error) {
+      console.error('Error creating a new users: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(newProvider);
+    }
+  });
+});
+
+// Update an existing home
+app.put('/api/users/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const updatedProvider = req.body;
+  const query = 'UPDATE users SET ? WHERE ID = ?';
+  db.query(query, [updatedProvider, ID], (error, results) => {
+    if (error) {
+      console.error('Error updating provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else if (results.affectedRows === 1) {
+      console.log('Data updated successfully');
+      res.json(updatedProvider);
+    } else {
+      console.error('Data not updated. User not found or no changes made.');
+      res.status(404).json({ error: 'User not found or no changes made.' });
+    }
+  });
+});
+
+// API endpoint to delete a home
+app.delete('/api/users/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const query = 'DELETE FROM users WHERE ID = ?';
+  db.query(query, ID, (error, results) => {
+    if (error) {
+      console.error('Error deleting provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json({ message: 'User deleted' });
+    }
+  });
+});
+// Fetch all bookings
+
+app.get('/api/bookings', (req, res) => {
+  const query = 'SELECT * FROM bookings';
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching data: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// Create a new bookings
+app.post('/api/bookings', (req, res) => {
+  const newProvider = req.body;
+  const query = 'INSERT INTO bookings SET ?';
+  db.query(query, newProvider, (error, results) => {
+    if (error) {
+      console.error('Error creating a new provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(newProvider);
+    }
+  });
+});
+
+
+
+// API endpoint to delete a home
+app.delete('/api/bookings/:booking_id', (req, res) => {
+  const booking_id = req.params.booking_id;
+  const query = 'DELETE FROM bookings WHERE booking_id = ?';
+  db.query(query, booking_id, (error, results) => {
+    if (error) {
+      console.error('Error deleting provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json({ message: 'User deleted' });
+    }
   });
 });
 

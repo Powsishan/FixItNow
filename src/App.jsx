@@ -1,5 +1,7 @@
 import React from 'react';
+import {useState} from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 
 import Companies from './Components/Companies';
 import Guide from './Components/Guide';
@@ -31,9 +33,15 @@ import CompleteGuide from './Components/CompleteGuide';
 import ServiceProviderList from './ServiceProvider/ServiceProviderList'; 
 
 
+import Header from './Admin/Header';
+import Sidebar from './Admin/Sidebar';
+import Home from './Admin/Home';
 
 
 function App() {
+
+ 
+
   return (
     <Router>
       
@@ -54,6 +62,14 @@ function App() {
         <Route path="/ServiceProviderList" element={<ServiceProviderList />} />
         <Route path="/Servicedashboard" element={<ServiceDashboard />} />
         <Route path="/Userdashboard" element={<UserDashboard />} />
+        <Route path="/Admin" element={
+        <>
+         <Header />
+      <Sidebar  />
+        <Home />
+        
+        </>
+      } />
 
 
         <Route path="/" element={
@@ -70,7 +86,11 @@ function App() {
         } />
       </Routes>
     </Router>
+
+
   );
 }
+
+
 
 export default App;

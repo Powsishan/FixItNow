@@ -6,6 +6,7 @@ import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
 import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import HomeIcon from "@mui/icons-material/Home";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ContactsIcon from "@mui/icons-material/Contacts";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
@@ -159,8 +160,15 @@ export const Navbar = () => {
           gap: "1rem",
         }}
       > 
+   <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          
+          <Link  to="/Userdashboard" style={{ textDecoration: 'none' }}>
+        <AccountCircleIcon fontSize="large" color="action"  sx={{ fontSize: 50 }} />
+         Account
+</Link>    
+        </Box>
+
    
- 
       </Box>
 
     </NavbarContainer>

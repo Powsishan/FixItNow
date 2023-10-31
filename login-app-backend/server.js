@@ -13,6 +13,7 @@ const timeSlots = ["09:00", "11:00", "14:00", "16:00"];
 const app = express();
 const port = 3001;
 app.use('/images', express.static(path.join(__dirname, '../images')));
+app.use('/images', express.static(path.join(__dirname, '../images')));
 
 // Middleware
 app.use(bodyParser.json());
@@ -46,7 +47,7 @@ const upload = multer({ storage: storage });
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '9r46#u@fb4K',
+  password: 'qwerty12345',
   database: 'bookings',
 });
 

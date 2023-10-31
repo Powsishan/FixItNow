@@ -106,7 +106,7 @@ const UserDashboard = () => {
 
   
   const handleLogout = () => {
-    Navigate('/Usrlogin')
+    Navigate('/')
     localStorage.clear();
   };
 

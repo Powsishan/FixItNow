@@ -112,7 +112,7 @@ const UserDashboard = () => {
     setDescription(event.target.value);
   }
   const handleLogout = () => {
-    Navigate('/become-a-fixer')
+    Navigate('/')
     localStorage.clear();
   };
 

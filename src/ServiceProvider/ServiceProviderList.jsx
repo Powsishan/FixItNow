@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Navbar from "../Components/Navbar";
+import Navbar2 from "../Components/Navbar2";
 import Box from "@mui/material/Box";
 
 import Filter from './Filter'; 
@@ -55,7 +55,7 @@ const ServiceProviderList = () => {
 
   return (
     <Box sx={{ backgroundColor: "#E6F0FF", minHeight: "80vh" }}>
-      <Navbar />
+      <Navbar2 />
 
       <Row>
         <Col md={4}>

@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import './login.css';
-import registerImage from '../media/register.svg';
 import log from '../media/Login.svg';
 import sign from '../media/sign.svg';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,11 +12,13 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
 
-function LoginPage() {
+function UsrLogin() {
   const [isSignUpMode, setIsSignUpMode] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isForgotPasswordMode, setIsForgotPasswordMode] = useState(false);
+
+  
 
   
 
@@ -54,7 +55,7 @@ function LoginPage() {
   
     const errorMessages = [];
   
-    if (formDataObj.username.trim() === '') {
+    if (formDataObj.u_username.trim() === '') {
       errorMessages.push('Please fill out the username field');
     }
   
@@ -74,13 +75,14 @@ function LoginPage() {
     }
   
     try {
-      const response = await Axios.post('http://localhost:3001/login', formDataObj);
+      const response = await Axios.post('http://localhost:3001/usrlogin', formDataObj);
   
       if (response.status === 200 && response.data.message === 'Login successful') {
-        localStorage.setItem('username', formDataObj.username);
+        localStorage.setItem('u_username', formDataObj.u_username);
         toast.success('Login successful');
-        window.location.href = '/UserDashboard';
-        // You can perform additional actions here, such as redirecting the user
+        
+        window.location.href = '/ServiceProviderList';
+        
       } else {
         setErrorMessage('Login failed');
       }
@@ -98,7 +100,7 @@ function LoginPage() {
   
     const errorMessages = [];
   
-    if (formDataObj.username.trim() === '') {
+    if (formDataObj.u_username.trim() === '') {
       errorMessages.push('Please fill out the username field');
     }
   
@@ -154,7 +156,7 @@ function LoginPage() {
     }
   
     try {
-      const response = await Axios.post('http://localhost:3001/register', formDataObj);
+      const response = await Axios.post('http://localhost:3001/registerusr', formDataObj);
   
       if (response.status === 200) {
        
@@ -193,7 +195,7 @@ function LoginPage() {
             </div>
             <div className="input-field">
               <FontAwesomeIcon icon={faUser} className='my-auto mx-auto' />
-              <input className='LoginInput' type="text" placeholder="username" name="username" />
+              <input className='LoginInput' type="text" placeholder="username" name="u_username" />
             </div>
             <div className="input-field">
               <FontAwesomeIcon icon={faLock} className='my-auto mx-auto' />
@@ -224,7 +226,7 @@ function LoginPage() {
               </a>
             </div>            <div className="input-field">
               <FontAwesomeIcon icon={faUser} className='my-auto mx-auto' />
-              <input className='LoginInput' type="text" placeholder="Username" name="username" />
+              <input className='LoginInput' type="text" placeholder="Username" name="u_username" />
             </div>
             <div className="input-field">
               <FontAwesomeIcon icon={faEnvelope} className='my-auto mx-auto' />
@@ -280,4 +282,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default UsrLogin;

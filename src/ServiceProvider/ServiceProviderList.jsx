@@ -8,64 +8,75 @@ import Box from "@mui/material/Box";
 import Filter from './Filter'; 
 import CustomCard from './CustomCard'; 
 
-const ServiceProviderList = ({ setSelectedTable }) => {
-  
+const ServiceProviderList = () => {
+
   const [tables, setTables] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-
-  
-
   useEffect(() => {
+    const storedUsername = localStorage.getItem('u_username');
+    console.log('login user:', storedUsername);
+    if (storedUsername) {
     const fetchTables = async () => {
       try {
-        const res = await axios.get('http://localhost:3001/serviceproviderprofile');
+        setLoading(true);
+        const apiUrl = `http://localhost:3001/serviceproviderprofile?username=${storedUsername}`;
+
+        const res = await axios.get(apiUrl);
+
         setTables(res.data);
+        setLoading(false);
       } catch (err) {
-        console.error('An error occurred while fetching data: ', err);
+        setError(err);
       }
     };
+    
 
     fetchTables();
+  }else{
+
+  };
   }, []);
 
-  const handleTableSelect = (tableId) => {
-    setSelectedTable(tableId);
-    navigate(`/booking/${tableId}`);
+  const handleTableSelect = (username,u_username) => {
+    navigate(`/booking/${username}`);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <Box sx={{ backgroundColor: "#E6F0FF", minHeight: "80vh" }}>
-    
       <Navbar />
-    
-    <Row>
-      <Col md={4}>
-        {/* Position the Filter component on the left */}
-        <Filter />
-      </Col>
-      <Col md={8}>
-        <section className="vh-100" style={{ backgroundColor: '#E6F0FF' }}>
-          <Container className=" d-flex justify-content-center">
-            <Row >
-              {tables.map((table, index) => (
-                <Col key={index} md={12} className='customCol'>
-                  <CustomCard table={table} handleTableSelect={handleTableSelect} />
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </section>
-      </Col>
-    </Row>
-  </Box> 
+
+      <Row>
+        <Col md={4}>
+          <Filter />
+        </Col>
+        <Col md={8}>
+          <section className="vh-100" style={{ backgroundColor: '#E6F0FF' }}>
+            <Container className=" d-flex justify-content-center">
+              <Row >
+                {tables.map((table, index) => (
+                  <Col key={index} md={12} className='customCol'>
+                    <CustomCard table={table} handleTableSelect={handleTableSelect} />
+                  </Col>
+                ))}
+              </Row>
+            </Container>
+          </section>
+        </Col>
+      </Row>
+    </Box>
   );
 };
 
 export default ServiceProviderList;
-
-
-
-
-
-

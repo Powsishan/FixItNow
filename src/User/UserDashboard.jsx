@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './user.css';
+import '../ServiceProvider/user.css';
 import { useNavigate } from 'react-router-dom';
 import { Nav, Tab } from 'react-bootstrap';
 import logo from '../media/logo(1).png';
@@ -15,7 +15,7 @@ import UpdateIcon from '@mui/icons-material/Done';
 import RestoreIcon from '@mui/icons-material/RotateLeftOutlined';
 import Logout from '@mui/icons-material/LogoutOutlined';
 import Avatar from '@mui/material/Avatar';
-
+ import BookedService from './BookedService';
 
 
 
@@ -25,14 +25,14 @@ const UserDashboard = () => {
   const [firstName, setFirstName] = useState('');
   const [img, setImage] = useState('');
   const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
-  const [JobTitle, setJobTitle] = useState('');
+  const [u_username, setUsername] = useState('');
+ 
   const [mobileNumber, setmobileNumber] = useState('');
   const [email, setemail] = useState('');
   const [NICnumber, setNICnumber] = useState('');
   const [address, setaddress] = useState('');
-  const [qualification, setqualification] = useState('');
-  const [Description, setDescription] = useState('');
+ 
+ 
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -41,26 +41,26 @@ const UserDashboard = () => {
   const Navigate = useNavigate();
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
+    const storedUsername = localStorage.getItem('u_username');
+    console.log('userdashboard user:', storedUsername);
     if (storedUsername) {
       // Use the stored username to fetch user data
-      const apiUrl = `http://localhost:3001/profile-data?username=${storedUsername}`;
+      const apiUrl = `http://localhost:3001/user-profile-data?u_username=${storedUsername}`;
 
       Axios.get(apiUrl, { withCredentials: true })
         .then((response) => {
-          console.log('Username:', response.data.username);
-          setUsername(response.data.username);
+          console.log('Username:', response.data.u_username);
+          setUsername(response.data.u_username);
           setServiceProviderData(response.data);
           setFirstName(response.data.firstName);
           setImage(response.data.img);
           setLastName(response.data.lastName);
-          setJobTitle(response.data.JobTitle);
+         
           setmobileNumber(response.data.mobileNumber);
           setemail(response.data.email);
           setNICnumber(response.data.NICnumber);
           setaddress(response.data.address);
-          setqualification(response.data.qualification);
-          setDescription(response.data.Description);
+         
         })
         .catch((error) => {
           console.error('Error fetching service provider data:', error);
@@ -84,9 +84,7 @@ const UserDashboard = () => {
     setUsername(event.target.value);
   };
 
-  const handleJobTitleChange = (event) => {
-    setJobTitle(event.target.value);
-  };
+  
 
   const handlePhoneChange = (event) => {
     setmobileNumber(event.target.value);
@@ -104,15 +102,11 @@ const UserDashboard = () => {
     setaddress(event.target.value);
   };
 
-  const handleQualificationChange = (event) => {
-    setqualification(event.target.value);
-  };
+  
 
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
-  }
+  
   const handleLogout = () => {
-    Navigate('/become-a-fixer')
+    Navigate('/Usrlogin')
     localStorage.clear();
   };
 
@@ -131,18 +125,17 @@ const UserDashboard = () => {
       firstName,
       lastName,
       img,
-      username,
-      JobTitle,
+      u_username,
+     
       mobileNumber,
       email,
       NICnumber,
       address,
-      qualification,
-      Description,
+     
     };
 
     // Make a PUT request to update the user data
-    const apiUrl = `http://localhost:3001/update-profile`; // Replace with your API endpoint
+    const apiUrl = `http://localhost:3001/user-update-profile`; // Replace with your API endpoint
     Axios.put(apiUrl, updatedUserData, { withCredentials: true })
       .then((response) => {
         console.log('User data updated successfully:', response.data);
@@ -184,12 +177,12 @@ const UserDashboard = () => {
 
     // Make an API request to change the password
     const changePasswordData = {
-      username,
+      u_username,
       oldPassword,
       newPassword,
     };
 
-    Axios.post('http://localhost:3001/change-password', changePasswordData, { withCredentials: true })
+    Axios.post('http://localhost:3001/user-change-password', changePasswordData, { withCredentials: true })
       .then((response) => {
         // Handle success, e.g., show a success message and clear the password fields.
         toast.success('Password changed successfully');
@@ -209,15 +202,13 @@ const UserDashboard = () => {
     setFirstName(serviceProviderData.firstName);
     setLastName(serviceProviderData.lastName);
     setImage(serviceProviderData.img);
-    setUsername(serviceProviderData.username);
-    setJobTitle(serviceProviderData.JobTitle);
+    setUsername(serviceProviderData.u_username);
+  
     setmobileNumber(serviceProviderData.mobileNumber);
     setemail(serviceProviderData.email);
     setNICnumber(serviceProviderData.NICnumber);
     setaddress(serviceProviderData.address);
-    setqualification(serviceProviderData.qualification);
-    setDescription(serviceProviderData.description);
-
+   
     setIsEditMode(false);
   };
 
@@ -226,7 +217,7 @@ const UserDashboard = () => {
     // Ask the user to confirm the account deletion
     if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
       // If the user confirms, make a request to the API to delete the account
-      Axios.delete('http://localhost:3001/delete-account', { data: { username } })
+      Axios.delete('http://localhost:3001/delete-account', { data: { u_username } })
         .then((response) => {
           // Handle success, e.g., show a success message and log the user out
           toast.success('Account deleted successfully');
@@ -245,8 +236,8 @@ const UserDashboard = () => {
 
   const calculateProfileCompleteness = () => {
     const fields = [
-      firstName, lastName, username, JobTitle, mobileNumber, img,
-      email, NICnumber, address, qualification, Description,
+      firstName, lastName, u_username, mobileNumber, img,
+      email, NICnumber, address, 
     ];
     const totalFields = fields.length;
     const filledFields = fields.filter(field => field !== null && field !== '').length;
@@ -323,9 +314,7 @@ const UserDashboard = () => {
                       <div class="profile-usertitle-name">
                         <h2>{`${serviceProviderData.firstName} ${serviceProviderData.lastName}`}</h2>
                       </div>
-                      <div class="profile-usertitle-job">
-                        <p>{serviceProviderData.JobTitle}</p>
-                      </div>
+                     
                       {renderProgressBar()}
                     </div>
 
@@ -378,29 +367,7 @@ const UserDashboard = () => {
                       </svg>
                       Profile Information
                     </a>
-                    <a
-                      href="#account"
-                      data-toggle="tab"
-                      className={`nav-item nav-link has-icon nav-link-faded ${activeTab === 'account' ? 'active' : ''}`}
-                      onClick={() => handleSelect('account')}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-settings mr-2"
-                      >
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                      </svg>
-                      Submit Documents
-                    </a>
+                    
                     <a
                       href="#security"
                       data-toggle="tab"
@@ -623,7 +590,7 @@ const UserDashboard = () => {
                           </div>
 
                           <div className="form-group col-md-6">
-                            <label htmlFor="username">Username</label>
+                            <label htmlFor="u_username">Username</label>
                             {isEditMode ? (
                               <input
                                 type="text"
@@ -632,30 +599,14 @@ const UserDashboard = () => {
                                 aria-describedby="usernameHelp"
                                 placeholder="Enter your username"
                                 readOnly={!isEditMode}
-                                value={username}
+                                value={u_username}
                                 onChange={handleUsernameChange}
                               />
                             ) : (
-                              <div>{username}</div>
+                              <div>{u_username}</div>
                             )}
                           </div>
-                          <div className="form-group col-md-6">
-                            <label htmlFor="serviceproviderprofile">Job Title</label>
-                            {isEditMode ? (
-                              <input
-                                type="text"
-                                className="form-control"
-                                id="location"
-                                placeholder="Enter your location"
-                                readOnly={!isEditMode}
-                                value={JobTitle}
-                                onChange={handleJobTitleChange}
-                              />
-                            ) : (
-                              <div>{JobTitle}</div>
-                            )}
-
-                          </div>
+                         
                           <div className="form-group col-md-4">
                             <label className="form-label">Phone</label>
                             {isEditMode ? (
@@ -718,47 +669,8 @@ const UserDashboard = () => {
                             )}
 
                           </div>
-                          <div className="form-group col-md-12">
-                            <label htmlFor="bio">Qualification</label>
-                            {isEditMode ? (
-                              <textarea
-                                className="form-control autosize"
-                                id="bio"
-                                placeholder="Write something about you"
-                                readOnly={!isEditMode}
-                                style={{ overflow: 'hidden', overflowWrap: 'break-word', resize: 'none', height: '62px' }}
-                                value={qualification}
-                                onChange={handleQualificationChange}
-                              />
-                            ) : (
-                              <div>{qualification}</div>
-                            )}
-
-                          </div>
-                          <div className="form-group col-md-12">
-                            <label htmlFor="bio">Description</label>
-                            {isEditMode ? (
-                              <textarea
-                                className="form-control autosize"
-                                id="bio"
-                                placeholder="Write something about you"
-                                readOnly={!isEditMode}
-                                style={{ overflow: 'hidden', overflowWrap: 'break-word', resize: 'none', height: '62px' }}
-                                value={Description}
-                                onChange={handleDescriptionChange}
-                              />
-                            ) : (
-                              <div>{Description}</div>
-                            )}
-
-                          </div>
-                          {/* <div className="form-group small text-muted col-md-12">
-                            All of the fields on this page are optional and can be deleted at any time, and by filling them out, you're giving us consent to share this data wherever your user profile appears.
-                          </div> */}
-                          {/* <div className="col-md-12">
-                            <button type="button" className="btn btn-primary">Update Profile</button>
-                            <button type="reset" className="btn btn-light">Reset Changes</button>
-                          </div> */}
+                          
+                          
                         </form>
                       </div>
                     </div>
@@ -841,7 +753,7 @@ const UserDashboard = () => {
                       <div className="tab-pane" id="notification">
                         <h6>Appointments</h6>
                         <hr />
-
+                        <BookedService/>
                       </div>
                     </div>
                   )}

@@ -57,7 +57,7 @@ export const Navbar = () => {
                 <ListItemIcon>
                   {index === 0 && <HomeIcon />}
                   {index === 1 && <MiscellaneousServicesIcon />}
-                  {index === 2 && < FeaturedPlayListIcon/>}
+                  {index === 2 && < FeaturedPlayListIcon />}
                   {index === 3 && <ListAltIcon />}
                   {index === 4 && <ContactsIcon />}
                 </ListItemIcon>
@@ -120,10 +120,12 @@ export const Navbar = () => {
       display: "none",
     },
   }));
-  
+
+
+
   const Navigate = useNavigate();
   const bookApntmnt = () => {
-    Navigate('/UsrLogin')
+    Navigate('/UsrLogin');
     localStorage.clear();
   };
 
@@ -165,29 +167,36 @@ export const Navbar = () => {
           justifyContent: "center",
           gap: "1rem",
         }}
-      > 
-      
-
-<Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-  <EngineeringIcon />
-  <StyledLink to="/become-a-fixer">
-  <NavLink variant="body2">Become a Fixer</NavLink>
-</StyledLink>
-</Box>
+      >
 
 
+        <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <EngineeringIcon />
+          <StyledLink to="/become-a-fixer">
+            <NavLink variant="body2">Become a Fixer</NavLink>
+          </StyledLink>
+        </Box>
 
 
 
 
-  
+
+
+<Link to="/UsrLogin" style={{ textDecoration: 'none' }}>
         <CustomButton
           backgroundColor="#0F1B4C"
           color="#fff"
-          onClick={bookApntmnt} 
           buttonText="Book an Appoinment"
         />
- 
+</Link>
+
+<Link to="/Userdashboard" style={{ textDecoration: 'none' }}>
+        <CustomButton
+          backgroundColor="#0F1B4C"
+          color="#fff"
+          buttonText="user login"
+        />
+</Link>
       </Box>
 
     </NavbarContainer>

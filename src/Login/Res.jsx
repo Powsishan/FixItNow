@@ -73,7 +73,7 @@ function LoginPage() {
       if (response.status === 200 && response.data.message === 'Login successful') {
         localStorage.setItem('username', formDataObj.username);
         toast.success('Login successful');
-        window.location.href = '/UserDashboard';
+        window.location.href = '/Servicedashboard';
         // You can perform additional actions here, such as redirecting the user
       } else {
         setErrorMessage('Login failed');

@@ -9,6 +9,7 @@ import Filter from './Filter';
 import CustomCard from './CustomCard'; 
 
 const ServiceProviderList = () => {
+
   const [tables, setTables] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -16,21 +17,31 @@ const ServiceProviderList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const storedUsername = localStorage.getItem('u_username');
+    console.log('login user:', storedUsername);
+    if (storedUsername) {
     const fetchTables = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://localhost:3001/serviceproviderprofile');
+        const apiUrl = `http://localhost:3001/serviceproviderprofile?username=${storedUsername}`;
+
+        const res = await axios.get(apiUrl);
+
         setTables(res.data);
         setLoading(false);
       } catch (err) {
         setError(err);
       }
     };
+    
 
     fetchTables();
+  }else{
+
+  };
   }, []);
 
-  const handleTableSelect = (username) => {
+  const handleTableSelect = (username,u_username) => {
     navigate(`/booking/${username}`);
   };
 

@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 
 const BookingForm = () => {
+  const storedUsername = localStorage.getItem('u_username');
+console.log('Booking user:', storedUsername);
     const { username } = useParams();
     const timeSlots = ["09:00", "11:00", "14:00", "16:00"];
     const [formData, setFormData] = useState({
@@ -22,9 +24,9 @@ const BookingForm = () => {
       fetchBookedTimeSlots(username, formData.booking_date);
     }, [username, formData.booking_date]);
   
-    const fetchBookedTimeSlots = async (username, booking_date) => {
+    const fetchBookedTimeSlots = async (username, booking_date,u_username) => {
       try {
-        const res = await axios.get(`http://localhost:3001/booked-slots/${username}/${booking_date}`);
+        const res = await axios.get(`http://localhost:3001/booked-slots/${username}/${booking_date}/`);
         if (res && res.data) {
           setBookedTimeSlots(res.data);
         }
@@ -39,9 +41,12 @@ const BookingForm = () => {
         toast.error('Please select a date and time slot.');
         return;
       }
-  
+      
+    
       try {
         const res = await axios.post('http://localhost:3001/book', {
+          
+          u_username: storedUsername, // Use storedUsername from local storage
           username,
           booking_date: formData.booking_date,
           booking_time: formData.booking_time,
@@ -61,7 +66,7 @@ const BookingForm = () => {
         }
       }
     };
-  
+    
     const handleClear = () => {
       setFormData({
         booking_date: '',

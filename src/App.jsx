@@ -13,6 +13,8 @@ import Footer from './Components/Footer';
 import Res from './Login/Res'; 
 import UsrLogin from './Login/UsrLogin';
 import UserDashboard from './User/UserDashboard';
+import AdminLogin from './Admin/AdminLogin';
+
 
 
 import User from './Dashboard/User'; 
@@ -62,7 +64,9 @@ function App() {
         <Route path="/ServiceProviderList" element={<ServiceProviderList />} />
         <Route path="/Servicedashboard" element={<ServiceDashboard />} />
         <Route path="/Userdashboard" element={<UserDashboard />} />
-        <Route path="/Admin" element={
+        <Route path="/Admin" element={<AdminLogin />} />
+
+        <Route path="/Home" element={
         <>
          <Header />
       <Sidebar  />

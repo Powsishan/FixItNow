@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { BsPersonCircle, BsPeopleFill, BsMenuButtonWideFill } from 'react-icons/bs';
 import ServiceProvidersTable from './ServiceProvidersTable';
 import HomeOwnersTable from './HomeOwnersTable';
 import Requests from './Requests';
@@ -84,7 +83,7 @@ function Home() {
         <div className='card' onClick={toggleServiceProviders}>
           <div className='card-inner'>
             <h3>SERVICE PROVIDERS</h3>
-            <BsPersonCircle className='card_icon' />
+          
           </div>
           <h1>00</h1>
         </div>
@@ -92,7 +91,7 @@ function Home() {
         <div className='card' onClick={toggleHomeOwners}>
           <div className='card-inner'>
             <h3>HOME OWNERS</h3>
-            <BsPersonCircle className='card_icon' />
+           
           </div>
           <h1>00</h1>
         </div>
@@ -100,7 +99,7 @@ function Home() {
         <div className='card' onClick={toggleRequests}>
           <div className='card-inner'>
             <h3>REQUESTS</h3>
-            <BsPeopleFill className='card_icon' />
+           
           </div>
           <h1>00</h1>
         </div>
@@ -108,7 +107,7 @@ function Home() {
         <div className='card' onClick={toggleReports}>
           <div className='card-inner'>
             <h3>Appointments</h3>
-            <BsMenuButtonWideFill className='icon' />
+            
           </div>
           <h1>00</h1>
         </div>

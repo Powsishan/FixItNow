@@ -36,8 +36,8 @@ function Header({ openSidebarToggle }) {
           <BsPersonCircle className='icon' onClick={toggleDropdown} />
           {showDropdown && (
             <div className='dropdown-menu'>
-              <a href='/homepage'>Homepage</a>
-              <a href='/logout'>Logout</a>
+              <a href='/'>Homepage</a>
+              <a href='/admin'>Logout</a>
             </div>
           )}
         </div>

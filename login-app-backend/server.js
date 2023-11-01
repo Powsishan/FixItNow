@@ -232,7 +232,7 @@ app.post('/usrlogin', async (req, res) => {
 app.get('/profile-data', (req, res) => {
   const { username } = req.query;
 
-  const query = 'SELECT * FROM ServiceProviderProfile WHERE Username = ?';
+  const query = 'SELECT * FROM serviceproviderprofile WHERE Username = ?';
   db.query(query, [username], (err, results) => {
     if (err) {
       console.error('Error fetching profile data:', err);
@@ -254,7 +254,7 @@ app.put('/update-profile', (req, res) => {
   const updatedUserData = req.body; // Data from the request body
 
   // Perform the update operation in the database
-  const query = 'UPDATE ServiceProviderProfile SET ? WHERE Username = ?';
+  const query = 'UPDATE approvedserviceprovider SET ? WHERE Username = ?';
   db.query(query, [updatedUserData, updatedUserData.username], (err, results) => {
     if (err) {
       console.error('Error updating profile data:', err);
@@ -306,14 +306,7 @@ app.get('/serviceproviderprofile', (req, res) => {
   });
 });
 
-//delete after image test
-app.get('/tables', (req, res) => {
-  const query = 'SELECT table_name, Description, image_url, JobTitle FROM tables';
-  db.query(query, (err, result) => {
-    if (err) { return res.status(500).json({ message: 'Internal Server Error' });}
-    res.status(200).json(result);
-  });
-});
+
 
 
 // Route for changing the user's password
@@ -512,9 +505,9 @@ app.post('/upload-documents', upload.array('documents', 3), (req, res) => {
 
 // ...
 
-
+//book a servise privider
 app.post('/book', async (req, res) => {
-  const { u_username, username, booking_date, booking_time } = req.body; // Include u_username in the request body
+  const { u_username, username, booking_date, booking_time } = req.body; 
 
   // Validate time slot
   if (!timeSlots.includes(booking_time)) {
@@ -541,7 +534,7 @@ app.post('/book', async (req, res) => {
   });
 });
 
-// Add a new route to fetch the booking data
+//  fetch the booking data
 app.get('/bookings', (req, res) => {
   
   const username = req.query.username;
@@ -601,7 +594,7 @@ app.get('/user-bookings', (req, res) => {
   });
 });
 
-
+//forget password 
 app.post('/forgot-password', (req, res) => {
   const { email } = req.body;
 
@@ -672,6 +665,313 @@ app.post('/reset-password', (req, res) => {
     });
   });
 });
+
+//admin login 
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+
+  // Replace 'admin' with your actual table name in the database
+  const query = 'SELECT * FROM admin WHERE username = ? AND password = ?';
+
+  db.query(query, [username, password], (err, results) => {
+    if (err) {
+      console.error('MySQL error: ' + err.message);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (results.length === 1) {
+      // Login successful
+      return res.status(200).json({ message: 'Login successful' });
+    } else {
+      // Login failed
+      return res.status(401).json({ error: 'Invalid username or password' });
+    }
+  });
+});
+
+
+
+//admin panel start here 
+
+// Create a new service provider
+app.post('/api/serviceproviderprofile', (req, res) => {
+  const newProvider = req.body;
+  const query = 'INSERT INTO serviceproviderprofile SET ?';
+  db.query(query, newProvider, (error, results) => {
+    if (error) {
+      console.error('Error creating a new provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(newProvider);
+    }
+  });
+});
+
+// Fetch all service providers
+app.get('/api/serviceproviderprofile', (req, res) => {
+  const query = 'SELECT * FROM serviceproviderprofile';
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching data: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// Create a new service provider
+app.post('/api/serviceproviderprofile', (req, res) => {
+  const newProvider = req.body;
+  const query = 'INSERT INTO serviceproviderprofile SET ?';
+  db.query(query, newProvider, (error, results) => {
+    if (error) {
+      console.error('Error creating a new provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(newProvider);
+    }
+  });
+});
+
+// Update an existing service provider
+app.put('/api/serviceproviderprofile/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const updatedProvider = req.body;
+  const query = 'UPDATE serviceproviderprofile SET ? WHERE ID = ?';
+  db.query(query, [updatedProvider, ID], (error, results) => {
+    if (error) {
+      console.error('Error updating provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else if (results.affectedRows === 1) {
+      console.log('Data updated successfully');
+      res.json(updatedProvider);
+    } else {
+      console.error('Data not updated. Provider not found or no changes made.');
+      res.status(404).json({ error: 'Provider not found or no changes made.' });
+    }
+  });
+});
+
+// API endpoint to delete a service provider
+app.delete('/api/serviceproviderprofile/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const query = 'DELETE FROM serviceproviderprofile WHERE ID = ?';
+  db.query(query, ID, (error, results) => {
+    if (error) {
+      console.error('Error deleting provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json({ message: 'Provider deleted' });
+    }
+  });
+});
+
+// Fetch all HOMEOWNERS 
+
+app.get('/api/users', (req, res) => {
+  const query = 'SELECT * FROM users';
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching data: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// Create a new home
+app.post('/api/users', (req, res) => {
+  const newProvider = req.body;
+  const query = 'INSERT INTO users SET ?';
+  db.query(query, newProvider, (error, results) => {
+    if (error) {
+      console.error('Error creating a new provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(newProvider);
+    }
+  });
+});
+
+// Update an existing home
+app.put('/api/users/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const updatedProvider = req.body;
+  const query = 'UPDATE users SET ? WHERE ID = ?';
+  db.query(query, [updatedProvider, ID], (error, results) => {
+    if (error) {
+      console.error('Error updating provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else if (results.affectedRows === 1) {
+      console.log('Data updated successfully');
+      res.json(updatedProvider);
+    } else {
+      console.error('Data not updated. User not found or no changes made.');
+      res.status(404).json({ error: 'User not found or no changes made.' });
+    }
+  });
+});
+
+// API endpoint to delete a home
+app.delete('/api/users/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const query = 'DELETE FROM users WHERE ID = ?';
+  db.query(query, ID, (error, results) => {
+    if (error) {
+      console.error('Error deleting provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json({ message: 'User deleted' });
+    }
+  });
+});
+// Fetch all bookings
+
+app.get('/api/bookings', (req, res) => {
+  const query = 'SELECT * FROM bookings';
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching data: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// Create a new home
+app.post('/api/bookings', (req, res) => {
+  const newProvider = req.body;
+  const query = 'INSERT INTO bookings SET ?';
+  db.query(query, newProvider, (error, results) => {
+    if (error) {
+      console.error('Error creating a new provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(newProvider);
+    }
+  });
+});
+
+// Update an existing home
+app.put('/api/bookings/:booking_id', (req, res) => {
+  const ID = req.params.ID;
+  const updatedProvider = req.body;
+  const query = 'UPDATE bookings SET ? WHERE booking_id = ?';
+  db.query(query, [updatedProvider, ID], (error, results) => {
+    if (error) {
+      console.error('Error updating provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else if (results.affectedRows === 1) {
+      console.log('Data updated successfully');
+      res.json(updatedProvider);
+    } else {
+      console.error('Data not updated. User not found or no changes made.');
+      res.status(404).json({ error: 'User not found or no changes made.' });
+    }
+  });
+});
+
+// API endpoint to delete a home
+app.delete('/api/bookings/:booking_id', (req, res) => {
+  const booking_id = req.params.booking_id;
+  const query = 'DELETE FROM bookings WHERE booking_id = ?';
+  db.query(query, booking_id, (error, results) => {
+    if (error) {
+      console.error('Error deleting provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json({ message: 'User deleted' });
+    }
+  });
+});
+
+
+
+
+
+
+app.get('/api/approvedserviceprovider', (req, res) => {
+  const query = 'SELECT * FROM approvedserviceprovider';
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching data: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+
+
+app.delete('/api/approvedserviceprovider/:ID', (req, res) => {
+  const ID = req.params.ID;
+  const query = 'DELETE FROM approvedserviceprovider WHERE ID = ?';
+  db.query(query, ID, (error, results) => {
+    if (error) {
+      console.error('Error deleting provider: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json({ message: 'Provider deleted' });
+    }
+  });
+});
+
+//saving approved service provider 
+app.post('/api/saveAndDeleteData', (req, res) => {
+  const dataToSave = req.body; // Assuming your data is sent as a JSON object
+
+  // Begin a database transaction
+  db.beginTransaction((err) => {
+    if (err) {
+      console.error('Error starting the transaction: ' + err.message);
+      res.status(500).json({ error: 'Error starting the transaction' });
+      return;
+    }
+
+    // Insert data into the new table (replace 'new_table' with your actual table name)
+    const insertSql = 'INSERT INTO serviceproviderprofile SET ?';
+    db.query(insertSql, dataToSave, (insertErr, insertResult) => {
+      if (insertErr) {
+        // Rollback the transaction in case of an error
+        db.rollback(() => {
+          console.error('Error saving data: ' + insertErr.message);
+          res.status(500).json({ error: 'Error saving data' });
+        });
+      } else {
+        // Delete the data from the original table (replace 'approvedserviceprovider' with your actual table name)
+        const deleteSql = 'DELETE FROM approvedserviceprovider WHERE ID = ?';
+        db.query(deleteSql, dataToSave.ID, (deleteErr, deleteResult) => {
+          if (deleteErr) {
+            // Rollback the transaction in case of an error
+            db.rollback(() => {
+              console.error('Error deleting data: ' + deleteErr.message);
+              res.status(500).json({ error: 'Error deleting data' });
+            });
+          } else {
+            // Commit the transaction if both operations are successful
+            db.commit((commitErr) => {
+              if (commitErr) {
+                console.error('Error committing the transaction: ' + commitErr.message);
+                res.status(500).json({ error: 'Error committing the transaction' });
+              } else {
+                console.log('Data saved and deleted successfully');
+                res.json({ message: 'Data saved and deleted successfully' });
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+});
+
+
+
+
 
 
 app.listen(port, () => {

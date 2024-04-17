@@ -42,3 +42,6 @@ Nareshkumar-[Nk008](https://github.com/Nk008)
 Thavakethan - https://github.com/Thavakethan
 We also acknowledge the developers and contributors to the technologies used in this project, including React.js, Node.js, MySQL, and MUI.
 
+
+<img width="949" alt="Screenshot 2024-04-17 092835" src="https://github.com/Powsishan/FixItNow/assets/138444583/3c752f56-a8f5-4e35-9928-1c885223e170">
+

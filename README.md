@@ -32,7 +32,7 @@ Contributing
 We welcome contributions from the community. Please follow our contribution guidelines for details on how to contribute to FixItNow.
 
 License
-This project is licensed under the MIT License.
+This project is licensed under the MIT License
 
 
 Acknowledgements

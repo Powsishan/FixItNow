@@ -39,6 +39,6 @@ Acknowledgements
 We would like to acknowledge the following individuals for their contributions to the FixItNow project:
 
 Nareshkumar-[Nk008](https://github.com/Nk008)
-Thavakethan 
+Thavakethan - https://github.com/Thavakethan
 We also acknowledge the developers and contributors to the technologies used in this project, including React.js, Node.js, MySQL, and MUI.
 
